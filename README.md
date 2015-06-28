@@ -10,3 +10,6 @@ Eg at 15:30 show me upcoming bus times
 Timeline intergration
 This watchface will also pin upcoming events to my timeline so that I know what I need to do
 Eg Pin task telling me to go to the gym today
+
+
+Finally, I'm making this watchface open source so that others find it easy to develop for Pebble. It will be split up into small tasks as much as possible, so people can use only what's relevant to them
