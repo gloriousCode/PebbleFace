@@ -9,6 +9,12 @@
     "resources": {
         "media": [
             {
+                "characterRegex": "[0-9 : ]",
+                "file": "fonts/imagine_font.ttf",
+                "name": "FONT_IMAGINE_40",
+                "type": "font"
+            },
+            {
                 "characterRegex": "[a-zA-Z0-9 : , ]",
                 "file": "fonts/Roboto-Medium.ttf",
                 "name": "FONT_ROBOTO_MEDIUM_40",
