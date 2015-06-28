@@ -9,26 +9,15 @@
     "resources": {
         "media": [
             {
-                "characterRegex": "[a-zA-Z0-9 :]",
-                "file": "fonts/Roboto-Thin.ttf",
-                "name": "FONT_ROBOTO_THIN_18",
-                "type": "font"
-            },
-            {
                 "characterRegex": "[a-zA-Z0-9 : , ]",
                 "file": "fonts/Roboto-Medium.ttf",
                 "name": "FONT_ROBOTO_MEDIUM_40",
                 "type": "font"
             },
             {
-                "file": "images/background.png",
-                "name": "RESOURCE_ID_IMAGE_BACKGROUND",
-                "type": "png"
-            },
-            {
-                "characterRegex": "[a-zA-Z0-9 : , .]",
-                "file": "fonts/perfect-dos-vga.ttf",
-                "name": "FONT_PERFECT_DOS_48",
+                "characterRegex": "[a-zA-Z0-9 :]",
+                "file": "fonts/Roboto-Thin.ttf",
+                "name": "FONT_ROBOTO_THIN_18",
                 "type": "font"
             }
         ]
