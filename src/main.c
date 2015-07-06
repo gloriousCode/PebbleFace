@@ -72,7 +72,8 @@ static void update_task(struct tm *tick_time) {
     strftime(hoursStr, sizeof("00"), "%H", tick_time);
     int hours = atoi(hoursStr);
     //strftime(dayChecker, sizeof("0"), "%w", tick_time);
-  if (hours >= 8 && hours <= 16){
+  if (hours >= 8 && hours <= 16)
+  {
     text_layer_set_text(s_task_layer, "WORK TIME");
   } else if (hours >= 16 && hours <=17) {
     text_layer_set_text(s_task_layer, "TRAVEL TIME");
