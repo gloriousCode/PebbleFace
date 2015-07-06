@@ -66,11 +66,18 @@ static void main_window_load(Window *window) {
   declare_text_layers(window);
 }
 
-static void update_task(char buffer[]) {
-  if (strcmp(buffer, "18:51") == 0) {
-    text_layer_set_text(s_task_layer, "lol");
-  } else if (strcmp(buffer, "18:58") == 0){
-    text_layer_set_text(s_task_layer, "DIE POTATO");
+//Perform certain functions depending on what time it is
+static void update_task(struct tm *tick_time) {
+    static char hoursStr[] = "00";
+    strftime(hoursStr, sizeof("00"), "%H", tick_time);
+    int hours = atoi(hoursStr);
+    //strftime(dayChecker, sizeof("0"), "%w", tick_time);
+  if (hours >= 8 && hours <= 16){
+    text_layer_set_text(s_task_layer, "WORK TIME");
+  } else if (hours >= 16 && hours <=17) {
+    text_layer_set_text(s_task_layer, "TRAVEL TIME");
+  } else if (hours >=17 && hours <=18){
+    text_layer_set_text(s_task_layer, "GYM TIME");
   }
   else{
     text_layer_set_text(s_task_layer, "FREE TIME");
@@ -89,7 +96,7 @@ static void update_time() {
   if(clock_is_24h_style() == true) {
     // Use 24 hour format
     strftime(buffer, sizeof("0000"), "%H%M", tick_time);
-    update_task(buffer);
+    update_task(tick_time);
   } else {
     // Use 12 hour format
     strftime(buffer, sizeof("0000"), "%I%M", tick_time);
