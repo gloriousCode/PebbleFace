@@ -10,6 +10,7 @@ static TextLayer *s_row_three_layer;
 
 static GFont s_time_font;
 static GFont s_task_font;
+static GFont s_text_time_font;
 static Layer *s_path_layer;
 static GPath *s_path;
 static GPathInfo PATH_INFO = {
@@ -42,14 +43,51 @@ static int get_days(struct tm *tick_time) {
   return day;
 }
 
-static char* get_hour_str(struct tm *tick_time) 
+static char* get_hour_str(struct tm *tick_time, int minutes) 
 {
-  static char hoursStr[] = "000000";
+  static char hoursStr[] = "0000000";
   strftime(hoursStr, sizeof("00"), "%I", tick_time);
   int hours = atoi(hoursStr);
-  if(hours == 1){
-    snprintf(hoursStr, 3, "ONE");
+  if(minutes >= 40) {
+    hours++;
   }
+  if(hours == 1){
+    snprintf(hoursStr, 7, "ONE");
+  }
+    if(hours == 2){
+    snprintf(hoursStr, 7, "TWO");
+  }
+    if(hours == 3){
+    snprintf(hoursStr, 7, "THREE");
+  }
+    if(hours == 4){
+    snprintf(hoursStr, 7, "FOUR");
+  }
+    if(hours == 5){
+    snprintf(hoursStr, 7, "FIVE");
+  }
+    if(hours == 6){
+    snprintf(hoursStr, 7, "SIX");
+  }
+    if(hours == 7){
+    snprintf(hoursStr, 7, "SEVEN");
+  }
+    if(hours == 8){
+    snprintf(hoursStr, 7, "EIGHT");
+  }
+    if(hours == 9){
+    snprintf(hoursStr, 7, "NINE");
+  }
+    if(hours == 10){
+    snprintf(hoursStr, 7, "TEN");
+  }
+    if(hours == 11){
+    snprintf(hoursStr, 7, "ELEVEN");
+  }
+    if(hours == 12){
+    snprintf(hoursStr, 7, "TWELVE");
+  }
+  
   
   return hoursStr;
 }
@@ -77,6 +115,7 @@ static void declare_drawing_layer(Window *window) {
 static void set_fonts() {
     // Create GFont
   s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_IMAGINE_44));
+  s_text_time_font =  fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_MEDIUM_22));
   s_task_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_THIN_18));
 }
 
@@ -108,9 +147,9 @@ static void declare_text_layers(Window *window) {
   text_layer_set_font(s_time_layer, s_time_font);
   text_layer_set_font(s_task_layer, s_task_font);
   
-  text_layer_set_font(s_row_one_layer, s_task_font);
-  text_layer_set_font(s_row_two_layer, s_task_font);
-  text_layer_set_font(s_row_three_layer, s_task_font);
+  text_layer_set_font(s_row_one_layer, s_text_time_font);
+  text_layer_set_font(s_row_two_layer, s_text_time_font);
+  text_layer_set_font(s_row_three_layer, s_text_time_font);
   
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
   text_layer_set_text_alignment(s_task_layer, GTextAlignmentCenter);
@@ -159,6 +198,7 @@ static void update_task(struct tm *tick_time) {
   }
 }
 
+//First row of the time. Typically the minutes
 static void set_row_one(struct tm *tick_time) {
   int minutes = get_minutes(tick_time);
   static char hoursStr[] = "00";
@@ -186,7 +226,7 @@ static void set_row_one(struct tm *tick_time) {
     text_layer_set_text(s_row_one_layer, "HALF");
   }
   if(minutes > 31 && minutes < 36) {
-    text_layer_set_text(s_row_one_layer, "THIRTY");
+    text_layer_set_text(s_row_one_layer, "TWENTY");
   }
   if(minutes > 36 && minutes < 41) {
     text_layer_set_text(s_row_one_layer, "TWENTY");
@@ -201,7 +241,7 @@ static void set_row_one(struct tm *tick_time) {
     text_layer_set_text(s_row_one_layer, "FIVE");
   }
 }
-
+//Second row of the time. Typically how much past the hour
 static void set_row_two(struct tm *tick_time) {
   int minutes = get_minutes(tick_time);
   static char hoursStr[] = "00";
@@ -220,19 +260,19 @@ static void set_row_two(struct tm *tick_time) {
     text_layer_set_text(s_row_two_layer, "FIVE PAST");
   }
   if(minutes > 26 && minutes < 31) {
-    text_layer_set_text(s_row_two_layer, "HALF");
+    text_layer_set_text(s_row_two_layer, "PAST");
   }
   if(minutes > 31 && minutes < 36) {
-    text_layer_set_text(s_row_two_layer, "FIVE PAST");
+    text_layer_set_text(s_row_two_layer, "FIVE TO");
   }
   if(minutes > 36 && minutes < 56) {
     text_layer_set_text(s_row_two_layer, "TO");
   }
 }
-
+//Third row of the time. Usually the hour
 static void set_row_three(struct tm *tick_time) {
   int minutes = get_minutes(tick_time);
-  char * hoursStr = get_hour_str(tick_time);
+  char * hoursStr = get_hour_str(tick_time, minutes);
   
   if(minutes > 56 || minutes <= 1) {
     text_layer_set_text(s_row_three_layer, "CLOCK");
@@ -240,6 +280,7 @@ static void set_row_three(struct tm *tick_time) {
   else {
      text_layer_set_text(s_row_three_layer, hoursStr);
   }
+  
 }
 
 static void update_time() {
@@ -274,20 +315,16 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 static void main_window_unload(Window *window) {
   // Unload GFont
   fonts_unload_custom_font(s_time_font);  
-  
-    // Destroy layer and path
+  // Destroy layer and path
   layer_destroy(s_path_layer);
   gpath_destroy(s_path);
-  
   // Destroy TextLayer
   text_layer_destroy(s_time_layer);
   text_layer_destroy(s_task_layer);
-  
-   text_layer_destroy(s_row_one_layer);
-   text_layer_destroy(s_row_two_layer);
-   text_layer_destroy(s_row_three_layer);
-  
-  
+  // Time rendering
+  text_layer_destroy(s_row_one_layer);
+  text_layer_destroy(s_row_two_layer);
+  text_layer_destroy(s_row_three_layer);
 }
   
 static void init() {
