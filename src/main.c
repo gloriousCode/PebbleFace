@@ -115,7 +115,7 @@ static void declare_drawing_layer(Window *window) {
 static void set_fonts() {
     // Create GFont
   s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_IMAGINE_44));
-  s_text_time_font =  fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_MEDIUM_22));
+  s_text_time_font =  fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_MEDIUM_26));
   s_task_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_THIN_18));
 }
 
@@ -129,15 +129,15 @@ static void declare_text_layers(Window *window) {
   text_layer_set_background_color(s_task_layer, GColorClear);
   text_layer_set_text_color(s_task_layer, GColorWhite);
   
-  s_row_one_layer = text_layer_create(GRect(5, 40, 100, 50));
+  s_row_one_layer = text_layer_create(GRect(5, 40, 200, 100));
   text_layer_set_background_color(s_row_one_layer, GColorClear);
   text_layer_set_text_color(s_row_one_layer, GColorWhite);
   
-    s_row_two_layer = text_layer_create(GRect(5, 55, 100, 50));
+    s_row_two_layer = text_layer_create(GRect(5, 65, 200, 100));
   text_layer_set_background_color(s_row_two_layer, GColorClear);
   text_layer_set_text_color(s_row_two_layer, GColorWhite);
   
-    s_row_three_layer = text_layer_create(GRect(5, 70, 100, 50));
+    s_row_three_layer = text_layer_create(GRect(5, 90, 200, 100));
   text_layer_set_background_color(s_row_three_layer, GColorClear);
   text_layer_set_text_color(s_row_three_layer, GColorWhite);
   

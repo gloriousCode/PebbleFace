@@ -17,7 +17,7 @@
             {
                 "characterRegex": "[a-zA-Z0-9 : , ]",
                 "file": "fonts/Roboto-Medium.ttf",
-                "name": "FONT_ROBOTO_MEDIUM_22",
+                "name": "FONT_ROBOTO_MEDIUM_26",
                 "type": "font"
             },
             {
