@@ -11,12 +11,6 @@ static TextLayer *s_row_three_layer;
 static GFont s_time_font;
 static GFont s_task_font;
 static GFont s_text_time_font;
-static Layer *s_path_layer;
-static GPath *s_path;
-static GPathInfo PATH_INFO = {
-  .num_points = 4,
-  .points = (GPoint[]) { {00, 46},  {220, 46}, {220, 120}, {00, 120} }
-};
 
 //Important mini methods to get the int values of time
 static int get_minutes(struct tm *tick_time) {
@@ -48,74 +42,54 @@ static char* get_hour_str(struct tm *tick_time, int minutes)
   static char hoursStr[] = "0000000";
   strftime(hoursStr, sizeof("00"), "%I", tick_time);
   int hours = atoi(hoursStr);
-  if(minutes >= 40) {
+  if(minutes >= 33) {
     hours++;
   }
   if(hours == 1 || hours == 13){
-    snprintf(hoursStr, 7, "ONE");
+    snprintf(hoursStr, 7, "one");
   }
     if(hours == 2 || hours == 14){
-    snprintf(hoursStr, 7, "TWO");
+    snprintf(hoursStr, 7, "two");
   }
     if(hours == 3 || hours == 15){
-    snprintf(hoursStr, 7, "THREE");
+    snprintf(hoursStr, 7, "three");
   }
     if(hours == 4 || hours == 16){
-    snprintf(hoursStr, 7, "FOUR");
+    snprintf(hoursStr, 7, "four");
   }
     if(hours == 5 || hours == 17){
-    snprintf(hoursStr, 7, "FIVE");
+    snprintf(hoursStr, 7, "five");
   }
     if(hours == 6 || hours == 18){
-    snprintf(hoursStr, 7, "SIX");
+    snprintf(hoursStr, 7, "size");
   }
     if(hours == 7 || hours == 19){
-    snprintf(hoursStr, 7, "SEVEN");
+    snprintf(hoursStr, 7, "seven");
   }
     if(hours == 8 || hours == 20){
-    snprintf(hoursStr, 7, "EIGHT");
+    snprintf(hoursStr, 7, "eight");
   }
     if(hours == 9 || hours == 21){
-    snprintf(hoursStr, 7, "NINE");
+    snprintf(hoursStr, 7, "nine");
   }
     if(hours == 10 || hours ==22){
-    snprintf(hoursStr, 7, "TEN");
+    snprintf(hoursStr, 7, "ten");
   }
     if(hours == 11 || hours == 23){
-    snprintf(hoursStr, 7, "ELEVEN");
+    snprintf(hoursStr, 7, "eleven");
   }
     if(hours == 12 || hours == 24){
-    snprintf(hoursStr, 7, "TWELVE");
+    snprintf(hoursStr, 7, "twelve");
   }
   
   
   return hoursStr;
 }
 
-
-//Method to draw layer
-static void layer_update_proc(Layer *layer, GContext *ctx) {
-  // Set the color using RGB values
-  graphics_context_set_fill_color(ctx, GColorSunsetOrange);
-
-  // Draw the filled shape in above color
-  gpath_draw_filled(ctx, s_path);
-}
-
-static void declare_drawing_layer(Window *window) {
-    Layer *window_layer = window_get_root_layer(window);
-  GRect bounds = layer_get_bounds(window_layer);
-  // Create GPath object
-  s_path = gpath_create(&PATH_INFO);
-  // Create Layer that the path will be drawn on
-  s_path_layer = layer_create(bounds);
-  layer_set_update_proc(s_path_layer, layer_update_proc);
-  layer_add_child(window_layer, s_path_layer);
-}
 static void set_fonts() {
     // Create GFont
-  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_IMAGINE_44));
-  s_text_time_font =  fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_MEDIUM_30));
+  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_IMAGINE_36));
+  s_text_time_font =  fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT);
   s_task_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_THIN_18));
 }
 
@@ -125,19 +99,19 @@ static void declare_text_layers(Window *window) {
   text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_text_color(s_time_layer, GColorWhite);
     // Create task TextLayer
-  s_task_layer = text_layer_create(GRect(5, 5, 100, 50));
-  text_layer_set_background_color(s_task_layer, GColorClear);
+  s_task_layer = text_layer_create(GRect(0, 0, 144, 24));
+  text_layer_set_background_color(s_task_layer, GColorCyan);
   text_layer_set_text_color(s_task_layer, GColorWhite);
   
-  s_row_one_layer = text_layer_create(GRect(5, 40, 200, 100));
+  s_row_one_layer = text_layer_create(GRect(5, 30, 200, 100));
   text_layer_set_background_color(s_row_one_layer, GColorClear);
   text_layer_set_text_color(s_row_one_layer, GColorWhite);
   
-    s_row_two_layer = text_layer_create(GRect(5, 65, 200, 100));
+    s_row_two_layer = text_layer_create(GRect(5, 70, 200, 100));
   text_layer_set_background_color(s_row_two_layer, GColorClear);
   text_layer_set_text_color(s_row_two_layer, GColorWhite);
   
-    s_row_three_layer = text_layer_create(GRect(5, 90, 200, 100));
+    s_row_three_layer = text_layer_create(GRect(5, 110, 200, 100));
   text_layer_set_background_color(s_row_three_layer, GColorClear);
   text_layer_set_text_color(s_row_three_layer, GColorWhite);
   
@@ -152,7 +126,7 @@ static void declare_text_layers(Window *window) {
   text_layer_set_font(s_row_three_layer, s_text_time_font);
   
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
-  text_layer_set_text_alignment(s_task_layer, GTextAlignmentCenter);
+  text_layer_set_text_alignment(s_task_layer, GTextAlignmentRight);
   
   text_layer_set_text_alignment(s_row_one_layer, GTextAlignmentLeft);
   text_layer_set_text_alignment(s_row_two_layer, GTextAlignmentLeft);
@@ -167,8 +141,7 @@ static void declare_text_layers(Window *window) {
     layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_row_three_layer));
 }
 
-static void main_window_load(Window *window) {  
-  declare_drawing_layer(window);  
+static void main_window_load(Window *window) {   
   declare_text_layers(window);
 }
 
@@ -183,18 +156,22 @@ static void update_task(struct tm *tick_time) {
   if (hours >= 8 && (hours <= 15 && minutes <=59)  && day >= 1 && day <= 5)
   {
     text_layer_set_text(s_task_layer, "WORK TIME");
+    text_layer_set_background_color(s_task_layer, GColorElectricBlue);
   } 
   else if (hours == 16 && minutes <=59 && day >= 1 && day <= 5) 
   {
     text_layer_set_text(s_task_layer, "TRAVEL TIME");
+    text_layer_set_background_color(s_task_layer, GColorOrange);
   } 
   else if ((day == 0 && hours >= 10 && hours < 15) || ((hours >=17  && minutes <=59) && (day == 1 || day == 3 || day == 4))) 
   {
     text_layer_set_text(s_task_layer, "GYM TIME");
+    text_layer_set_background_color(s_task_layer, GColorRed);
   }
   else
   {
     text_layer_set_text(s_task_layer, "FREE TIME");
+    text_layer_set_background_color(s_task_layer, GColorIslamicGreen);
   }
 }
 
@@ -203,63 +180,51 @@ static void set_row_one(struct tm *tick_time) {
   int minutes = get_minutes(tick_time);
   char * hoursStr = get_hour_str(tick_time, minutes);
   
-  if(minutes > 56 || minutes <= 1) {
+
+  
+  if(minutes > 58 || minutes <= 3) {
+    text_layer_set_font(s_row_one_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
     text_layer_set_text(s_row_one_layer, hoursStr);
   }
-  if(minutes > 1 && minutes <= 6) {
-    text_layer_set_text(s_row_one_layer, "FIVE");
+  else {
+    	text_layer_set_font(s_row_one_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT));
   }
-  if(minutes > 6 && minutes <= 11) {
-    text_layer_set_text(s_row_one_layer, "TEN");
+  if((minutes > 3 && minutes <= 8) || (minutes > 53 && minutes <= 58)) {
+    text_layer_set_text(s_row_one_layer, "five");
   }
-    if(minutes > 11 && minutes <= 16) {
-    text_layer_set_text(s_row_one_layer, "QUARTER");
+  if((minutes > 8 && minutes <= 13) || (minutes > 48 && minutes <= 53)) {
+    text_layer_set_text(s_row_one_layer, "ten");
   }
-  if(minutes > 16 && minutes <= 21) {
-    text_layer_set_text(s_row_one_layer, "TWENTY");
+    if((minutes > 13 && minutes <= 18) || (minutes > 43 && minutes <= 48)) {
+    text_layer_set_text(s_row_one_layer, "quarter");
   }
-  if(minutes > 21 && minutes <= 26) {
-    text_layer_set_text(s_row_one_layer, "TWENTY");
+  if((minutes > 18 && minutes <= 28) || (minutes > 33 && minutes <= 43)) {
+    text_layer_set_text(s_row_one_layer, "twenty");
   }
-  if(minutes > 26 && minutes <= 31) {
-    text_layer_set_text(s_row_one_layer, "HALF");
-  }
-  if(minutes > 31 && minutes <= 36) {
-    text_layer_set_text(s_row_one_layer, "TWENTY");
-  }
-  if(minutes > 36 && minutes <= 41) {
-    text_layer_set_text(s_row_one_layer, "TWENTY");
-  }
-  if(minutes > 41 && minutes <= 46) {
-    text_layer_set_text(s_row_one_layer, "QUARTER");
-  }
-  if(minutes > 46 && minutes <= 51) {
-    text_layer_set_text(s_row_one_layer, "TEN");
-  }
-  if(minutes > 51 && minutes <= 56) {
-    text_layer_set_text(s_row_one_layer, "FIVE");
+  if(minutes > 28 && minutes <= 33) {
+    text_layer_set_text(s_row_one_layer, "half");
   }
 }
 //Second row of the time. Typically how much past the hour
 static void set_row_two(struct tm *tick_time) {
   int minutes = get_minutes(tick_time);  
-  if(minutes > 56 || minutes <= 1) {
-    text_layer_set_text(s_row_two_layer, "O'");
+  if(minutes > 58 || minutes <= 3) {
+    text_layer_set_text(s_row_two_layer, "o'");
   }
-  if(minutes > 1 && minutes <= 21) {
-    text_layer_set_text(s_row_two_layer, "PAST");
+  if(minutes > 3 && minutes <= 23) {
+    text_layer_set_text(s_row_two_layer, "past");
   }
-  if(minutes > 21 && minutes <= 26) {
-    text_layer_set_text(s_row_two_layer, "FIVE PAST");
+  if(minutes > 23 && minutes <= 28) {
+    text_layer_set_text(s_row_two_layer, "five past");
   }
-  if(minutes > 26 && minutes <= 31) {
-    text_layer_set_text(s_row_two_layer, "PAST");
+  if(minutes > 28 && minutes <= 33) {
+    text_layer_set_text(s_row_two_layer, "past");
   }
-  if(minutes > 31 && minutes <= 36) {
-    text_layer_set_text(s_row_two_layer, "FIVE TO");
+  if(minutes > 33 && minutes <= 38) {
+    text_layer_set_text(s_row_two_layer, "five to");
   }
-  if(minutes > 36 && minutes <= 56) {
-    text_layer_set_text(s_row_two_layer, "TO");
+  if(minutes > 38 && minutes <= 58) {
+    text_layer_set_text(s_row_two_layer, "to");
   }
 }
 //Third row of the time. Usually the hour
@@ -267,10 +232,12 @@ static void set_row_three(struct tm *tick_time) {
   int minutes = get_minutes(tick_time);
   char * hoursStr = get_hour_str(tick_time, minutes);
   
-  if(minutes > 56 || minutes <= 1) {
-    text_layer_set_text(s_row_three_layer, "CLOCK");
+  if(minutes > 58 || minutes <= 3) {
+    text_layer_set_font(s_row_three_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT));
+    text_layer_set_text(s_row_three_layer, "clock");
   }
   else {
+    text_layer_set_font(s_row_three_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
      text_layer_set_text(s_row_three_layer, hoursStr);
   }
   
@@ -308,9 +275,8 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 static void main_window_unload(Window *window) {
   // Unload GFont
   fonts_unload_custom_font(s_time_font);  
-  // Destroy layer and path
-  layer_destroy(s_path_layer);
-  gpath_destroy(s_path);
+    fonts_unload_custom_font(s_task_font);  
+    fonts_unload_custom_font(s_text_time_font);  
   // Destroy TextLayer
   text_layer_destroy(s_time_layer);
   text_layer_destroy(s_task_layer);

@@ -9,9 +9,9 @@
     "resources": {
         "media": [
             {
-                "characterRegex": "[0-9a-zA-Z - : ]",
+                "characterRegex": "[0-9a-zA-Z - \\': ]",
                 "file": "fonts/imagine_font.ttf",
-                "name": "FONT_IMAGINE_44",
+                "name": "FONT_IMAGINE_36",
                 "type": "font"
             },
             {
