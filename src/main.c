@@ -132,6 +132,12 @@ static char* get_hour_str(struct tm *tick_time, int minutes)
 }
 
 
+static void set_fonts() {
+    // Create GFont
+  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_IMAGINE_36));
+  s_text_time_font =  fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT);
+  s_task_font =  fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD);
+}
 
 static void set_text_layer_bounds() {
   // Create micro time TextLayer
@@ -173,12 +179,6 @@ static void apply_fonts_set_alignment()  {
   text_layer_set_text_alignment(s_row_three_layer, GTextAlignmentLeft);
 }
 
-static void set_fonts() {
-    // Create GFont
-  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_IMAGINE_36));
-  s_text_time_font =  fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT);
-  s_task_font =  fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD);
-}
 
 static void add_text_layers_to_window(Window *window) {
   // Add it as a child layer to the Window's root layer
@@ -192,8 +192,8 @@ static void add_text_layers_to_window(Window *window) {
 
 static void declare_text_layers(Window *window) {
   set_text_layer_bounds();
+    set_fonts();
   apply_fonts_set_alignment();
-  set_fonts();
   add_text_layers_to_window(window);
 }
 
@@ -217,7 +217,7 @@ static void update_task(struct tm *tick_time) {
   else if (hours == 16 && minutes <=59 && day >= 1 && day <= 5) 
   {
     text_layer_set_text(s_task_layer, "TRAVEL TIME");
-    layer_set_update_proc(s_task_color_layer, task_background_orange);
+     layer_set_update_proc(s_task_color_layer, task_background_orange);
   } 
   else if ((day == 0 && hours >= 10 && hours < 15) || ((hours >=17  && minutes <=59) && (day == 1 || day == 3 || day == 4))) 
   {
