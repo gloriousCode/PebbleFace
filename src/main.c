@@ -12,6 +12,53 @@ static GFont s_time_font;
 static GFont s_task_font;
 static GFont s_text_time_font;
 
+static Layer *s_task_color_layer;
+static GPath *s_task_color_path;
+static GPathInfo s_task_color_path_info = {
+  .num_points = 4,
+  .points = (GPoint[]) { {00, 00},  {144, 00}, {144, 30}, {00, 30} }
+};
+
+//Method to draw layer
+static void task_background_red(Layer *layer, GContext *ctx) {
+  // Set the color using RGB values
+  graphics_context_set_fill_color(ctx, GColorRed);
+  // Draw the filled shape in above color
+  gpath_draw_filled(ctx, s_task_color_path);
+}
+
+static void task_background_blue(Layer *layer, GContext *ctx) {
+  // Set the color using RGB values
+  graphics_context_set_fill_color(ctx, GColorBlueMoon);
+  // Draw the filled shape in above color
+  gpath_draw_filled(ctx, s_task_color_path);
+}
+
+static void task_background_orange(Layer *layer, GContext *ctx) {
+  // Set the color using RGB values
+  graphics_context_set_fill_color(ctx, GColorOrange);
+  // Draw the filled shape in above color
+  gpath_draw_filled(ctx, s_task_color_path);
+}
+
+static void task_background_green(Layer *layer, GContext *ctx) {
+  // Set the color using RGB values
+  graphics_context_set_fill_color(ctx, GColorIslamicGreen);
+  // Draw the filled shape in above color
+  gpath_draw_filled(ctx, s_task_color_path);
+}
+
+static void declare_drawing_layer(Window *window) {
+    Layer *window_layer = window_get_root_layer(window);
+  GRect bounds = layer_get_bounds(window_layer);
+  // Create GPath object
+  s_task_color_path = gpath_create(&s_task_color_path_info);
+  // Create Layer that the path will be drawn on
+  s_task_color_layer = layer_create(bounds);
+  layer_set_update_proc(s_task_color_layer, task_background_red);
+  layer_add_child(window_layer, s_task_color_layer);
+}
+
 //Important mini methods to get the int values of time
 static int get_minutes(struct tm *tick_time) {
   static char minuteStr[] = "00";
@@ -61,7 +108,7 @@ static char* get_hour_str(struct tm *tick_time, int minutes)
     snprintf(hoursStr, 7, "five");
   }
     if(hours == 6 || hours == 18){
-    snprintf(hoursStr, 7, "size");
+    snprintf(hoursStr, 7, "six");
   }
     if(hours == 7 || hours == 19){
     snprintf(hoursStr, 7, "seven");
@@ -80,44 +127,37 @@ static char* get_hour_str(struct tm *tick_time, int minutes)
   }
     if(hours == 12 || hours == 24){
     snprintf(hoursStr, 7, "twelve");
-  }
-  
-  
+  }  
   return hoursStr;
 }
 
-static void set_fonts() {
-    // Create GFont
-  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_IMAGINE_36));
-  s_text_time_font =  fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT);
-  s_task_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_ROBOTO_THIN_18));
-}
 
-static void declare_text_layers(Window *window) {
-    // Create time TextLayer
+
+static void set_text_layer_bounds() {
+  // Create micro time TextLayer
   s_time_layer = text_layer_create(GRect(5, 52, 139, 50));
   text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_text_color(s_time_layer, GColorWhite);
-    // Create task TextLayer
-  s_task_layer = text_layer_create(GRect(0, 0, 144, 24));
-  text_layer_set_background_color(s_task_layer, GColorCyan);
+  // Create task TextLayer
+  s_task_layer = text_layer_create(GRect(40, 0, 100, 24));
+  text_layer_set_background_color(s_task_layer, GColorClear);
   text_layer_set_text_color(s_task_layer, GColorWhite);
-  
+  //Create fuzzy time row one layer
   s_row_one_layer = text_layer_create(GRect(5, 30, 200, 100));
   text_layer_set_background_color(s_row_one_layer, GColorClear);
   text_layer_set_text_color(s_row_one_layer, GColorWhite);
-  
-    s_row_two_layer = text_layer_create(GRect(5, 70, 200, 100));
+  //Create fuzzy time row two layer
+  s_row_two_layer = text_layer_create(GRect(5, 70, 200, 100));
   text_layer_set_background_color(s_row_two_layer, GColorClear);
   text_layer_set_text_color(s_row_two_layer, GColorWhite);
-  
-    s_row_three_layer = text_layer_create(GRect(5, 110, 200, 100));
+  //Create fuzzy time row three layer
+  s_row_three_layer = text_layer_create(GRect(5, 110, 200, 100));
   text_layer_set_background_color(s_row_three_layer, GColorClear);
   text_layer_set_text_color(s_row_three_layer, GColorWhite);
-  
-  set_fonts();
-  
-    // Apply to TextLayer
+}
+
+static void apply_fonts_set_alignment()  {
+  // Apply to TextLayer
   text_layer_set_font(s_time_layer, s_time_font);
   text_layer_set_font(s_task_layer, s_task_font);
   
@@ -126,22 +166,39 @@ static void declare_text_layers(Window *window) {
   text_layer_set_font(s_row_three_layer, s_text_time_font);
   
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
-  text_layer_set_text_alignment(s_task_layer, GTextAlignmentRight);
+  text_layer_set_text_alignment(s_task_layer, GTextAlignmentLeft);
   
   text_layer_set_text_alignment(s_row_one_layer, GTextAlignmentLeft);
   text_layer_set_text_alignment(s_row_two_layer, GTextAlignmentLeft);
   text_layer_set_text_alignment(s_row_three_layer, GTextAlignmentLeft);
-  
-    // Add it as a child layer to the Window's root layer
+}
+
+static void set_fonts() {
+    // Create GFont
+  s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_IMAGINE_36));
+  s_text_time_font =  fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT);
+  s_task_font =  fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD);
+}
+
+static void add_text_layers_to_window(Window *window) {
+  // Add it as a child layer to the Window's root layer
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_time_layer));
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_task_layer));
   
-    layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_row_one_layer));
-    layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_row_two_layer));
-    layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_row_three_layer));
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_row_one_layer));
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_row_two_layer));
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_row_three_layer));
+}
+
+static void declare_text_layers(Window *window) {
+  set_text_layer_bounds();
+  apply_fonts_set_alignment();
+  set_fonts();
+  add_text_layers_to_window(window);
 }
 
 static void main_window_load(Window *window) {   
+  declare_drawing_layer(window);
   declare_text_layers(window);
 }
 
@@ -152,26 +209,25 @@ static void update_task(struct tm *tick_time) {
   int minutes = get_minutes(tick_time);
   int day = get_days(tick_time);
 
-  //strftime(dayChecker, sizeof("0"), "%w", tick_time);
   if (hours >= 8 && (hours <= 15 && minutes <=59)  && day >= 1 && day <= 5)
   {
     text_layer_set_text(s_task_layer, "WORK TIME");
-    text_layer_set_background_color(s_task_layer, GColorElectricBlue);
+    layer_set_update_proc(s_task_color_layer, task_background_blue);
   } 
   else if (hours == 16 && minutes <=59 && day >= 1 && day <= 5) 
   {
     text_layer_set_text(s_task_layer, "TRAVEL TIME");
-    text_layer_set_background_color(s_task_layer, GColorOrange);
+    layer_set_update_proc(s_task_color_layer, task_background_orange);
   } 
   else if ((day == 0 && hours >= 10 && hours < 15) || ((hours >=17  && minutes <=59) && (day == 1 || day == 3 || day == 4))) 
   {
     text_layer_set_text(s_task_layer, "GYM TIME");
-    text_layer_set_background_color(s_task_layer, GColorRed);
+    layer_set_update_proc(s_task_color_layer, task_background_red);
   }
   else
   {
     text_layer_set_text(s_task_layer, "FREE TIME");
-    text_layer_set_background_color(s_task_layer, GColorIslamicGreen);
+    layer_set_update_proc(s_task_color_layer, task_background_green);
   }
 }
 
@@ -179,8 +235,6 @@ static void update_task(struct tm *tick_time) {
 static void set_row_one(struct tm *tick_time) {
   int minutes = get_minutes(tick_time);
   char * hoursStr = get_hour_str(tick_time, minutes);
-  
-
   
   if(minutes > 58 || minutes <= 3) {
     text_layer_set_font(s_row_one_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
@@ -208,6 +262,7 @@ static void set_row_one(struct tm *tick_time) {
 //Second row of the time. Typically how much past the hour
 static void set_row_two(struct tm *tick_time) {
   int minutes = get_minutes(tick_time);  
+  
   if(minutes > 58 || minutes <= 3) {
     text_layer_set_text(s_row_two_layer, "o'");
   }
@@ -247,25 +302,17 @@ static void update_time() {
   // Get a tm structure
   time_t temp = time(NULL); 
   struct tm *tick_time = localtime(&temp);
-
   // Create a long-lived buffer
   static char buffer[] = "0000";
   // Write the current hours and minutes into the buffer
-  if(clock_is_24h_style() == true) {
-    // Use 24 hour format
-    strftime(buffer, sizeof("0000"), "%H%M", tick_time);
-    update_task(tick_time);
-  } else {
-    // Use 12 hour format
-    strftime(buffer, sizeof("0000"), "%I%M", tick_time);
-  }
+  // Use 24 hour format
+  strftime(buffer, sizeof("0000"), "%H%M", tick_time);
+  update_task(tick_time);
   // Display this time on the TextLayer
   //text_layer_set_text(s_time_layer, buffer);
   set_row_one(tick_time);
   set_row_two(tick_time);
   set_row_three(tick_time);
-  
-
 }
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
@@ -277,6 +324,9 @@ static void main_window_unload(Window *window) {
   fonts_unload_custom_font(s_time_font);  
     fonts_unload_custom_font(s_task_font);  
     fonts_unload_custom_font(s_text_time_font);  
+  
+  gpath_destroy(s_task_color_path);
+  
   // Destroy TextLayer
   text_layer_destroy(s_time_layer);
   text_layer_destroy(s_task_layer);
