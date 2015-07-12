@@ -41,6 +41,13 @@ static void task_background_orange(Layer *layer, GContext *ctx) {
   gpath_draw_filled(ctx, s_task_color_path);
 }
 
+static void task_background_purple(Layer *layer, GContext *ctx) {
+  // Set the color using RGB values
+  graphics_context_set_fill_color(ctx, GColorPurple);
+  // Draw the filled shape in above color
+  gpath_draw_filled(ctx, s_task_color_path);
+}
+
 static void task_background_green(Layer *layer, GContext *ctx) {
   // Set the color using RGB values
   graphics_context_set_fill_color(ctx, GColorIslamicGreen);
@@ -179,20 +186,25 @@ static void apply_fonts_set_alignment()  {
   text_layer_set_text_alignment(s_row_three_layer, GTextAlignmentLeft);
 }
 
+static void add_small_time_layer_to_window(Window *window){
+   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_time_layer));
+}
 
-static void add_text_layers_to_window(Window *window) {
-  // Add it as a child layer to the Window's root layer
-  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_time_layer));
-  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_task_layer));
-  
+static void add_text_time_layers_to_window(Window *window) {
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_row_one_layer));
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_row_two_layer));
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_row_three_layer));
 }
 
+static void add_text_layers_to_window(Window *window) {
+  // Add it as a child layer to the Window's root layer
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_task_layer));
+  add_text_time_layers_to_window(window);
+}
+
 static void declare_text_layers(Window *window) {
   set_text_layer_bounds();
-    set_fonts();
+  set_fonts();
   apply_fonts_set_alignment();
   add_text_layers_to_window(window);
 }
@@ -209,15 +221,23 @@ static void update_task(struct tm *tick_time) {
   int minutes = get_minutes(tick_time);
   int day = get_days(tick_time);
 
-  if (hours >= 8 && (hours <= 15 && minutes <=59)  && day >= 1 && day <= 5)
+  if (hours >= 8 && (hours <= 15 && minutes <=44)  && day >= 1 && day <= 5)
   {
     text_layer_set_text(s_task_layer, "WORK TIME");
     layer_set_update_proc(s_task_color_layer, task_background_blue);
   } 
-  else if (hours == 16 && minutes <=59 && day >= 1 && day <= 5) 
+  else if ((hours >= 15 && minutes >44)  && day >= 1 && day <= 5) {
+    //render small clock to make room for js data
+    text_layer_set_text(s_task_layer, "PREPARATION TIME");
+    layer_set_update_proc(s_task_color_layer, task_background_purple);
+  }
+  else if ((hours == 16 && minutes ==14)  && day >= 1 && day <= 5) {
+    //render normal time again
+  }
+  else if ((hours == 16 && minutes <=59) && day >= 1 && day <= 5) 
   {
     text_layer_set_text(s_task_layer, "TRAVEL TIME");
-     layer_set_update_proc(s_task_color_layer, task_background_orange);
+    layer_set_update_proc(s_task_color_layer, task_background_orange);
   } 
   else if ((day == 0 && hours >= 10 && hours < 15) || ((hours >=17  && minutes <=59) && (day == 1 || day == 3 || day == 4))) 
   {
@@ -235,51 +255,69 @@ static void update_task(struct tm *tick_time) {
 static void set_row_one(struct tm *tick_time) {
   int minutes = get_minutes(tick_time);
   char * hoursStr = get_hour_str(tick_time, minutes);
-  
+
   if(minutes > 58 || minutes <= 3) {
     text_layer_set_font(s_row_one_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
     text_layer_set_text(s_row_one_layer, hoursStr);
   }
   else {
-    	text_layer_set_font(s_row_one_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT));
+    text_layer_set_font(s_row_one_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT));
   }
-  if((minutes > 3 && minutes <= 8) || (minutes > 53 && minutes <= 58)) {
-    text_layer_set_text(s_row_one_layer, "five");
+  const char * current = text_layer_get_text(s_row_one_layer);
+  const char * five = "five";
+  if(((minutes > 3 && minutes <= 8) || (minutes > 53 && minutes <= 58)) && current != five) {
+    text_layer_set_text(s_row_one_layer, five);
+    return;
   }
-  if((minutes > 8 && minutes <= 13) || (minutes > 48 && minutes <= 53)) {
-    text_layer_set_text(s_row_one_layer, "ten");
+  const char * ten = "ten";
+  if(((minutes > 8 && minutes <= 13) || (minutes > 48 && minutes <= 53)) && current != ten) {
+    text_layer_set_text(s_row_one_layer, ten);
+    return;
   }
-    if((minutes > 13 && minutes <= 18) || (minutes > 43 && minutes <= 48)) {
-    text_layer_set_text(s_row_one_layer, "quarter");
+  const char * quarter = "quarter";
+  if(((minutes > 13 && minutes <= 18) || (minutes > 43 && minutes <= 48)) && current != quarter) {
+    text_layer_set_text(s_row_one_layer, quarter);
+    return;
   }
-  if((minutes > 18 && minutes <= 28) || (minutes > 33 && minutes <= 43)) {
-    text_layer_set_text(s_row_one_layer, "twenty");
+  const char * twenty = "twenty";
+  if(((minutes > 18 && minutes <= 28) || (minutes > 33 && minutes <= 43)) && current != twenty) {
+    text_layer_set_text(s_row_one_layer, twenty);
+    return;
   }
-  if(minutes > 28 && minutes <= 33) {
-    text_layer_set_text(s_row_one_layer, "half");
+  const char * half = "half";
+  if(minutes > 28 && minutes <= 33 && current != half) {
+    text_layer_set_text(s_row_one_layer, half);
+    return;
   }
 }
 //Second row of the time. Typically how much past the hour
 static void set_row_two(struct tm *tick_time) {
   int minutes = get_minutes(tick_time);  
-  
-  if(minutes > 58 || minutes <= 3) {
+  const char * current = text_layer_get_text(s_row_one_layer);
+  const char * o = "o'";
+  if((minutes > 58 || minutes <= 3) && current != o) {
     text_layer_set_text(s_row_two_layer, "o'");
+    return;
   }
-  if(minutes > 3 && minutes <= 23) {
+  const char * past = "past";
+  if(((minutes > 3 && minutes <= 23) || (minutes > 28 && minutes <= 33)) && current != past) {
     text_layer_set_text(s_row_two_layer, "past");
+    return;      
   }
-  if(minutes > 23 && minutes <= 28) {
+  const char * fivePast = "five past";
+  if((minutes > 23 && minutes <= 28) && current != fivePast) {
     text_layer_set_text(s_row_two_layer, "five past");
+    return;
   }
-  if(minutes > 28 && minutes <= 33) {
-    text_layer_set_text(s_row_two_layer, "past");
-  }
-  if(minutes > 33 && minutes <= 38) {
+  const char * fiveTo = "five to";
+  if((minutes > 33 && minutes <= 38) && current != fiveTo) {
     text_layer_set_text(s_row_two_layer, "five to");
+    return;
   }
-  if(minutes > 38 && minutes <= 58) {
+  const char * to = "to";
+  if((minutes > 38 && minutes <= 58) && current != to) {
     text_layer_set_text(s_row_two_layer, "to");
+    return;
   }
 }
 //Third row of the time. Usually the hour
@@ -308,32 +346,56 @@ static void update_time() {
   // Use 24 hour format
   strftime(buffer, sizeof("0000"), "%H%M", tick_time);
   update_task(tick_time);
-  // Display this time on the TextLayer
-  //text_layer_set_text(s_time_layer, buffer);
-  set_row_one(tick_time);
-  set_row_two(tick_time);
-  set_row_three(tick_time);
+  
+  int hours = get_hours(tick_time);
+  int minutes = get_minutes(tick_time);
+  int day = get_days(tick_time);
+  
+  if((hours == 15 && minutes ==44)&& day >= 1 && day <= 5) {
+    //clear text time
+    text_layer_set_text(s_row_one_layer, "");
+    text_layer_set_text(s_row_two_layer, "");
+    text_layer_set_text(s_row_three_layer, "");
+  }
+  if (hours == 16 && minutes ==15  && day >= 1 && day <= 5) {
+    text_layer_set_text(s_time_layer, "");
+  }
+  if (((hours == 15 && minutes >=44) || (hours == 16 && minutes <=14)) && day >= 1 && day <= 5) {
+    //render small clock to make room for js data
+    text_layer_set_text(s_time_layer, buffer);
+  }
+  else {
+    set_row_one(tick_time);
+    set_row_two(tick_time);
+    set_row_three(tick_time);
+  }
 }
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   update_time();
 }
 
-static void main_window_unload(Window *window) {
-  // Unload GFont
-  fonts_unload_custom_font(s_time_font);  
-    fonts_unload_custom_font(s_task_font);  
-    fonts_unload_custom_font(s_text_time_font);  
-  
-  gpath_destroy(s_task_color_path);
-  
-  // Destroy TextLayer
+static void destory_small_time_layer() {
   text_layer_destroy(s_time_layer);
-  text_layer_destroy(s_task_layer);
-  // Time rendering
+}
+static void destroy_text_time_layer() {
+    // Time rendering
   text_layer_destroy(s_row_one_layer);
   text_layer_destroy(s_row_two_layer);
   text_layer_destroy(s_row_three_layer);
+}
+
+static void main_window_unload(Window *window) {
+  // Unload GFont
+  fonts_unload_custom_font(s_time_font);  
+  fonts_unload_custom_font(s_task_font);  
+  fonts_unload_custom_font(s_text_time_font);  
+  
+  gpath_destroy(s_task_color_path);
+  destory_small_time_layer(window);
+  // Destroy TextLayer
+  text_layer_destroy(s_task_layer);
+  destroy_text_time_layer(window);
 }
   
 static void init() {
@@ -349,7 +411,7 @@ static void init() {
   // Show the Window on the watch, with animated=true
   window_stack_push(s_main_window, true);
   // Make sure the time is displayed from the start
-  update_time();
+  update_time(s_main_window);
   // Register with TickTimerService
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
 }
