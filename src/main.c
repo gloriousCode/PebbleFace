@@ -19,6 +19,59 @@ static GPathInfo s_task_color_path_info = {
   .points = (GPoint[]) { {00, 00},  {144, 00}, {144, 30}, {00, 30} }
 };
 
+//Bools
+bool currentlyWorkTime = false;
+bool currentlyPrepTime = false;
+bool currentlyGymTime = false;
+bool currentlyCodeTime = false;
+bool currentlyStudyTime = false;
+bool currentlyReadTime = false;
+bool currentlyTravelTime = false;
+bool currentlyFreeTime = false;
+
+//Constants
+const char * clock = "clock";
+const char * o = "o'";
+const char * past = "past";
+const char * fivePast = "five past";
+const char * to = "to";
+const char * fiveTo = "five to";
+
+const char * quarter = "quarter";
+const char * twenty = "twenty";
+const char * half = "half";
+
+const char * one = "one";
+const char * two = "two";
+const char * three = "three";
+const char * four = "four";
+const char * five = "five";
+const char * six = "six";
+const char * seven = "seven";
+const char * eight = "eight";
+const char * nine = "nine";
+const char * ten = "ten";
+const char * eleven = "eleven";
+const char * twelve = "twelve";
+
+const char * workTime = "WORK TIME";
+const char * prepTime = "PREP TIME";
+const char * gymTime = "GYM TIME";
+const char * codeTime = "CODE TIME";
+const char * studyTime = "STUDY TIME";
+const char * readTime = "READ TIME";
+const char * travelTime = "TRAVEL TIME";
+const char * freeTime = "FREE TIME";
+
+const char * strEmpty = "";
+
+//All the long lived buffers
+static char buffer[] = "0000";
+static char minuteStr[] = "00";
+static char hoursStr[] = "00";
+static char dayStr[] = "0";
+static char timetextbuffer[] = "0000000000";
+
 //Method to draw layer
 static void task_background_red(Layer *layer, GContext *ctx) {
   // Set the color using RGB values
@@ -66,74 +119,69 @@ static void declare_drawing_layer(Window *window) {
   layer_add_child(window_layer, s_task_color_layer);
 }
 
+
+
 //Important mini methods to get the int values of time
 static int get_minutes(struct tm *tick_time) {
-  static char minuteStr[] = "00";
   strftime(minuteStr, sizeof("00"), "%M", tick_time);
   int minutes = atoi(minuteStr); 
-  
   return minutes;
 }
 
 static int get_hours(struct tm *tick_time) {
-  static char hoursStr[] = "00";
   strftime(hoursStr, sizeof("00"), "%H", tick_time);
   int hours = atoi(hoursStr);
-  
   return hours;
 }
 
 static int get_days(struct tm *tick_time) {
-  static char dayStr[] = "0";
   strftime(dayStr, sizeof("0"), "%w", tick_time);
   int day = atoi(dayStr);
-  
   return day;
 }
 
 static char* get_hour_str(struct tm *tick_time, int minutes) 
 {
-  static char hoursStr[] = "0000000";
   strftime(hoursStr, sizeof("00"), "%I", tick_time);
   int hours = atoi(hoursStr);
   if(minutes >= 33) {
     hours++;
   }
   if(hours == 1 || hours == 13){
-    snprintf(hoursStr, 7, "one");
+    snprintf(hoursStr, 7, one);
   }
     if(hours == 2 || hours == 14){
-    snprintf(hoursStr, 7, "two");
+    snprintf(hoursStr, 7, two);
   }
     if(hours == 3 || hours == 15){
-    snprintf(hoursStr, 7, "three");
+    snprintf(hoursStr, 7, three);
   }
     if(hours == 4 || hours == 16){
-    snprintf(hoursStr, 7, "four");
+    snprintf(hoursStr, 7, four);
   }
     if(hours == 5 || hours == 17){
-    snprintf(hoursStr, 7, "five");
+    snprintf(hoursStr, 7, five);
   }
     if(hours == 6 || hours == 18){
-    snprintf(hoursStr, 7, "six");
+    snprintf(hoursStr, 7, six);
   }
     if(hours == 7 || hours == 19){
-    snprintf(hoursStr, 7, "seven");
+    snprintf(hoursStr, 7, seven);
   }
     if(hours == 8 || hours == 20){
-    snprintf(hoursStr, 7, "eight");
+    snprintf(hoursStr, 7, eight);
   }
     if(hours == 9 || hours == 21){
-    snprintf(hoursStr, 7, "nine");
+    snprintf(hoursStr, 7, nine);
   }
     if(hours == 10 || hours ==22){
-    snprintf(hoursStr, 7, "ten");
+    snprintf(hoursStr, 7, ten);
   }
     if(hours == 11 || hours == 23){
-    snprintf(hoursStr, 7, "eleven");
+    snprintf(hoursStr, 7, eleven);
   }
     if(hours == 12 || hours == 24){
-    snprintf(hoursStr, 7, "twelve");
+    snprintf(hoursStr, 7, twelve);
   }  
   return hoursStr;
 }
@@ -223,68 +271,130 @@ static void update_task(struct tm *tick_time) {
 
   if (hours >= 8 && (hours <= 15 && minutes <=44)  && day >= 1 && day <= 5)
   {
-    text_layer_set_text(s_task_layer, "WORK TIME");
-    layer_set_update_proc(s_task_color_layer, task_background_blue);
+    if(!currentlyWorkTime) {   
+      vibes_double_pulse();
+      currentlyWorkTime = true;
+      currentlyPrepTime = false;
+      currentlyGymTime = false;
+      currentlyCodeTime = false;
+      currentlyStudyTime = false;
+      currentlyReadTime = false;
+      currentlyTravelTime = false;
+      currentlyFreeTime = false;
+      
+      text_layer_set_text(s_task_layer, workTime);
+      layer_set_update_proc(s_task_color_layer, task_background_blue);
+    }
   } 
   else if ((hours >= 15 && minutes >44)  && day >= 1 && day <= 5) {
-    //render small clock to make room for js data
-    text_layer_set_text(s_task_layer, "PREPARATION TIME");
-    layer_set_update_proc(s_task_color_layer, task_background_purple);
+    if(!currentlyPrepTime) {
+      vibes_double_pulse();
+      currentlyWorkTime = false;
+      currentlyPrepTime = true;
+      currentlyGymTime = false;
+      currentlyCodeTime = false;
+      currentlyStudyTime = false;
+      currentlyReadTime = false;
+      currentlyTravelTime = false;
+      currentlyFreeTime = false;
+      
+      //render small clock to make room for js data
+      text_layer_set_text(s_task_layer, prepTime);
+      layer_set_update_proc(s_task_color_layer, task_background_purple);
+    }
   }
   else if ((hours == 16 && minutes ==14)  && day >= 1 && day <= 5) {
     //render normal time again
   }
   else if ((hours == 16 && minutes <=59) && day >= 1 && day <= 5) 
   {
-    text_layer_set_text(s_task_layer, "TRAVEL TIME");
-    layer_set_update_proc(s_task_color_layer, task_background_orange);
+    if(!currentlyTravelTime) {
+      vibes_double_pulse();
+      currentlyWorkTime = false;
+      currentlyPrepTime = false;
+      currentlyGymTime = false;
+      currentlyCodeTime = false;
+      currentlyStudyTime = false;
+      currentlyReadTime = false;
+      currentlyTravelTime = true;
+      currentlyFreeTime = false;
+      
+      text_layer_set_text(s_task_layer, travelTime);
+      layer_set_update_proc(s_task_color_layer, task_background_orange);
+    }
   } 
   else if ((day == 0 && hours >= 10 && hours < 15) || ((hours >=17  && minutes <=59) && (day == 1 || day == 3 || day == 4))) 
   {
-    text_layer_set_text(s_task_layer, "GYM TIME");
-    layer_set_update_proc(s_task_color_layer, task_background_red);
+    if(!currentlyGymTime) {
+      vibes_double_pulse();
+      currentlyWorkTime = false;
+      currentlyPrepTime = false;
+      currentlyGymTime = true;
+      currentlyCodeTime = false;
+      currentlyStudyTime = false;
+      currentlyReadTime = false;
+      currentlyTravelTime = false;
+      currentlyFreeTime = false;
+      
+      text_layer_set_text(s_task_layer, gymTime);
+      layer_set_update_proc(s_task_color_layer, task_background_red);
+    }
   }
-  else
+  else 
   {
-    text_layer_set_text(s_task_layer, "FREE TIME");
-    layer_set_update_proc(s_task_color_layer, task_background_green);
+    if(!currentlyFreeTime) {
+      vibes_double_pulse();
+      currentlyWorkTime = false;
+      currentlyPrepTime = false;
+      currentlyGymTime = false;
+      currentlyCodeTime = false;
+      currentlyStudyTime = false;
+      currentlyReadTime = false;
+      currentlyTravelTime = false;
+      currentlyFreeTime = true;
+      
+      text_layer_set_text(s_task_layer, freeTime);
+      layer_set_update_proc(s_task_color_layer, task_background_green);
+    }
   }
 }
 
 //First row of the time. Typically the minutes
 static void set_row_one(struct tm *tick_time) {
   int minutes = get_minutes(tick_time);
-  char * hoursStr = get_hour_str(tick_time, minutes);
-
-  if(minutes > 58 || minutes <= 3) {
+  char * hoursText = get_hour_str(tick_time, minutes);
+  const char * current = text_layer_get_text(s_row_one_layer);
+  if((minutes > 58 || minutes <= 3) || (minutes > 23 && minutes <= 28)) {
     text_layer_set_font(s_row_one_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
-    text_layer_set_text(s_row_one_layer, hoursStr);
   }
   else {
     text_layer_set_font(s_row_one_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT));
   }
-  const char * current = text_layer_get_text(s_row_one_layer);
-  const char * five = "five";
+  if(((minutes > 58 || minutes <= 3) || (minutes > 23 && minutes <= 28))  && current != hoursText) {
+    
+    text_layer_set_text(s_row_one_layer, hoursText);
+  }
+
   if(((minutes > 3 && minutes <= 8) || (minutes > 53 && minutes <= 58)) && current != five) {
     text_layer_set_text(s_row_one_layer, five);
     return;
   }
-  const char * ten = "ten";
+
   if(((minutes > 8 && minutes <= 13) || (minutes > 48 && minutes <= 53)) && current != ten) {
     text_layer_set_text(s_row_one_layer, ten);
     return;
   }
-  const char * quarter = "quarter";
+
   if(((minutes > 13 && minutes <= 18) || (minutes > 43 && minutes <= 48)) && current != quarter) {
     text_layer_set_text(s_row_one_layer, quarter);
     return;
   }
-  const char * twenty = "twenty";
-  if(((minutes > 18 && minutes <= 28) || (minutes > 33 && minutes <= 43)) && current != twenty) {
+
+  if(((minutes > 18 && minutes <= 23) || (minutes > 33 && minutes <= 43)) && current != twenty) {
     text_layer_set_text(s_row_one_layer, twenty);
     return;
   }
-  const char * half = "half";
+
   if(minutes > 28 && minutes <= 33 && current != half) {
     text_layer_set_text(s_row_one_layer, half);
     return;
@@ -294,46 +404,46 @@ static void set_row_one(struct tm *tick_time) {
 static void set_row_two(struct tm *tick_time) {
   int minutes = get_minutes(tick_time);  
   const char * current = text_layer_get_text(s_row_one_layer);
-  const char * o = "o'";
+
   if((minutes > 58 || minutes <= 3) && current != o) {
-    text_layer_set_text(s_row_two_layer, "o'");
+    text_layer_set_text(s_row_two_layer, o);
     return;
   }
-  const char * past = "past";
   if(((minutes > 3 && minutes <= 23) || (minutes > 28 && minutes <= 33)) && current != past) {
-    text_layer_set_text(s_row_two_layer, "past");
+    text_layer_set_text(s_row_two_layer,past);
     return;      
   }
-  const char * fivePast = "five past";
-  if((minutes > 23 && minutes <= 28) && current != fivePast) {
-    text_layer_set_text(s_row_two_layer, "five past");
+  if((minutes > 23 && minutes <= 28) && current != twenty) {
+    text_layer_set_text(s_row_two_layer, twenty);
     return;
   }
-  const char * fiveTo = "five to";
   if((minutes > 33 && minutes <= 38) && current != fiveTo) {
-    text_layer_set_text(s_row_two_layer, "five to");
+    text_layer_set_text(s_row_two_layer,fiveTo);
     return;
   }
-  const char * to = "to";
   if((minutes > 38 && minutes <= 58) && current != to) {
-    text_layer_set_text(s_row_two_layer, "to");
+    text_layer_set_text(s_row_two_layer, to);
     return;
   }
 }
 //Third row of the time. Usually the hour
 static void set_row_three(struct tm *tick_time) {
   int minutes = get_minutes(tick_time);
-  char * hoursStr = get_hour_str(tick_time, minutes);
+  char * houtsText = get_hour_str(tick_time, minutes);
+  const char * current = text_layer_get_text(s_row_one_layer);
   
-  if(minutes > 58 || minutes <= 3) {
+  if((minutes > 58 || minutes <= 3) && current != clock) {
     text_layer_set_font(s_row_three_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT));
-    text_layer_set_text(s_row_three_layer, "clock");
+    text_layer_set_text(s_row_three_layer, clock);
+  }
+  else if((minutes > 23 && minutes <= 28) && current != five) {
+    text_layer_set_font(s_row_three_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT));
+    text_layer_set_text(s_row_three_layer, five);
   }
   else {
     text_layer_set_font(s_row_three_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
-     text_layer_set_text(s_row_three_layer, hoursStr);
+     text_layer_set_text(s_row_three_layer, houtsText);
   }
-  
 }
 
 static void update_time() {
@@ -341,7 +451,7 @@ static void update_time() {
   time_t temp = time(NULL); 
   struct tm *tick_time = localtime(&temp);
   // Create a long-lived buffer
-  static char buffer[] = "0000";
+
   // Write the current hours and minutes into the buffer
   // Use 24 hour format
   strftime(buffer, sizeof("0000"), "%H%M", tick_time);
@@ -353,12 +463,12 @@ static void update_time() {
   
   if((hours == 15 && minutes ==44)&& day >= 1 && day <= 5) {
     //clear text time
-    text_layer_set_text(s_row_one_layer, "");
-    text_layer_set_text(s_row_two_layer, "");
-    text_layer_set_text(s_row_three_layer, "");
+    text_layer_set_text(s_row_one_layer, strEmpty);
+    text_layer_set_text(s_row_two_layer, strEmpty);
+    text_layer_set_text(s_row_three_layer, strEmpty);
   }
   if (hours == 16 && minutes ==15  && day >= 1 && day <= 5) {
-    text_layer_set_text(s_time_layer, "");
+    text_layer_set_text(s_time_layer, strEmpty);
   }
   if (((hours == 15 && minutes >=44) || (hours == 16 && minutes <=14)) && day >= 1 && day <= 5) {
     //render small clock to make room for js data
@@ -392,10 +502,10 @@ static void main_window_unload(Window *window) {
   fonts_unload_custom_font(s_text_time_font);  
   
   gpath_destroy(s_task_color_path);
-  destory_small_time_layer(window);
+  destory_small_time_layer();
   // Destroy TextLayer
   text_layer_destroy(s_task_layer);
-  destroy_text_time_layer(window);
+  destroy_text_time_layer();
 }
   
 static void init() {
@@ -411,7 +521,7 @@ static void init() {
   // Show the Window on the watch, with animated=true
   window_stack_push(s_main_window, true);
   // Make sure the time is displayed from the start
-  update_time(s_main_window);
+  update_time();
   // Register with TickTimerService
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
 }
