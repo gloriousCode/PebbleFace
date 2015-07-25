@@ -75,7 +75,7 @@ static char buffer[] = "0000";
 static char minuteStr[] = "00";
 static char hoursStr[] = "00";
 static char dayStr[] = "0";
-static char timetextbuffer[] = "0000000";
+static char timetextbuffer[] = "000000000";
 static char timetextbufferRowOne[] = "00000000";
 static char timetextbufferRowTwo[] = "00000000";
 static char timetextbufferRowThree[] = "00000000";
@@ -147,7 +147,6 @@ static void set_days(struct tm *tick_time) {
 
 static void set_hours_string(struct tm *tick_time) 
 {
-  strftime(hoursStr, sizeof("00"), "%I", tick_time);
   int timeHours = hours;
   if(minutes >= 33) {
     timeHours++;
@@ -331,63 +330,59 @@ static void update_task(struct tm *tick_time) {
 
 //First row of the time. Typically the minutes
 static void set_row_one() {
-  const char * current = text_layer_get_text(s_row_one_layer);
-  if((minutes > 58 || minutes <= 3) || (minutes > 23 && minutes <= 28)) {
+
+  if((minutes > 58 || minutes <= 3)) {
     text_layer_set_font(s_row_one_layer, s_text_time_bold_font);
   }
   else {
     text_layer_set_font(s_row_one_layer, s_text_time_font);
   }
-  if(((minutes > 58 || minutes <= 3) || (minutes > 23 && minutes <= 28))  && strcmp(current, timetextbuffer) !=0) {
+  if(((minutes > 58 || minutes <= 3) || (minutes > 23 && minutes <= 28))  && strcmp(timetextbufferRowOne, timetextbuffer) !=0) {
     snprintf(timetextbufferRowOne, 8, timetextbuffer);
   }
-  else if(((minutes > 3 && minutes <= 8) || (minutes > 53 && minutes <= 58)) && strcmp(current, five) !=0 ) {
+  else if(((minutes > 3 && minutes <= 8) || (minutes > 53 && minutes <= 58)) && strcmp(timetextbufferRowOne, five) !=0 ) {
      snprintf(timetextbufferRowOne, 5, five);
   }
-  else if(((minutes > 8 && minutes <= 13) || (minutes > 48 && minutes <= 53)) && strcmp(current, ten) !=0 ) {
+  else if(((minutes > 8 && minutes <= 13) || (minutes > 48 && minutes <= 53)) && strcmp(timetextbufferRowOne, ten) !=0 ) {
      snprintf(timetextbufferRowOne, 4, ten);
   }
-  else if(((minutes > 13 && minutes <= 18) || (minutes > 43 && minutes <= 48)) && strcmp(current, quarter) !=0 ) {
+  else if(((minutes > 13 && minutes <= 18) || (minutes > 43 && minutes <= 48)) && strcmp(timetextbufferRowOne, quarter) !=0 ) {
      snprintf(timetextbufferRowOne, 8, quarter);
   }
-  else if(((minutes > 18 && minutes <= 23) || (minutes > 33 && minutes <= 43)) && strcmp(current, twenty) !=0 ) {
+  else if(((minutes > 18 && minutes <= 23) || (minutes > 33 && minutes <= 43)) && strcmp(timetextbufferRowOne, twenty) !=0 ) {
      snprintf(timetextbufferRowOne, 7, twenty);
   }
-  else if(minutes > 28 && minutes <= 33 && strcmp(current, half) !=0 ) {
+  else if(minutes > 28 && minutes <= 33 && strcmp(timetextbufferRowOne, half) !=0 ) {
      snprintf(timetextbufferRowOne, 5, half);
   }
   text_layer_set_text(s_row_one_layer, timetextbufferRowOne);
 }
 //Second row of the time. Typically how much past the hour
 static void set_row_two() {
-  const char * current = text_layer_get_text(s_row_one_layer);
-
-  if((minutes > 58 || minutes <= 3) && strcmp(current, o) !=0 ) {
+  if((minutes > 58 || minutes <= 3) && strcmp(timetextbufferRowTwo, o) !=0 ) {
      snprintf(timetextbufferRowTwo, 2, o);
   }
-  else if(((minutes > 3 && minutes <= 23) || (minutes > 28 && minutes <= 33)) && strcmp(current, past) !=0 ) {
+  else if(((minutes > 3 && minutes <= 23) || (minutes > 28 && minutes <= 33)) && strcmp(timetextbufferRowTwo, past) !=0 ) {
      snprintf(timetextbufferRowTwo, 5, past);
   }
-  else if((minutes > 23 && minutes <= 28) && strcmp(current, twenty) !=0 ) {
+  else if((minutes > 23 && minutes <= 28) && strcmp(timetextbufferRowTwo, twenty) !=0 ) {
      snprintf(timetextbufferRowTwo, 7, twenty);
   }
-  else if((minutes > 33 && minutes <= 38) && strcmp(current,  fiveTo) !=0 ) {
+  else if((minutes > 33 && minutes <= 38) && strcmp(timetextbufferRowTwo,  fiveTo) !=0 ) {
      snprintf(timetextbufferRowTwo, 8, fiveTo);
   }
-  else if((minutes > 38 && minutes <= 58) && strcmp(current, to) !=0 ) {
+  else if((minutes > 38 && minutes <= 58) && strcmp(timetextbufferRowTwo, to) !=0 ) {
      snprintf(timetextbufferRowTwo, 3, to);
   }
   text_layer_set_text(s_row_two_layer, timetextbufferRowTwo);
 }
 //Third row of the time. Usually the hour
 static void set_row_three() {
-  const char * current = text_layer_get_text(s_row_one_layer);
-  
-  if((minutes > 58 || minutes <= 3) &&  strcmp(current, clock) !=0 ) {
+  if((minutes > 58 || minutes <= 3) &&  strcmp(timetextbufferRowThree, clock) !=0 ) {
     text_layer_set_font(s_row_three_layer, s_text_time_font);
     snprintf(timetextbufferRowThree, 6, clock);
   }
-  else if((minutes > 23 && minutes <= 28) &&  strcmp(current, five) !=0 ) {
+  else if((minutes > 23 && minutes <= 28) &&  strcmp(timetextbufferRowThree, five) !=0 ) {
     text_layer_set_font(s_row_three_layer, s_text_time_font);
     snprintf(timetextbufferRowThree, 5, five);
   }
@@ -415,8 +410,7 @@ static void update_time() {
   set_days(tick_time);
   set_hours_string(tick_time);
   
-  
-   update_task(tick_time);
+  update_task(tick_time);
   
   if((hours == 15 && minutes ==44)&& days >= 1 && days <= 5) {
     //clear text time
