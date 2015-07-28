@@ -55,14 +55,14 @@ const char * ten = "ten";
 const char * eleven = "eleven";
 const char * twelve = "twelve";
 
-const char * workTime = "WORK TIME";
-const char * prepTime = "PREP TIME";
-const char * gymTime = "GYM TIME";
-const char * codeTime = "CODE TIME";
-const char * studyTime = "STUDY TIME";
-const char * readTime = "READ TIME";
-const char * travelTime = "TRAVEL TIME";
-const char * freeTime = "FREE TIME";
+const char * workTime = "WORK";
+const char * prepTime = "PREP";
+const char * gymTime = "GYM";
+const char * codeTime = "CODE";
+const char * studyTime = "STUDY";
+const char * readTime = "READ";
+const char * travelTime = "TRAVEL";
+const char * freeTime = "FREEDOM";
 
 const char * strEmpty = "";
 
@@ -148,7 +148,7 @@ static void set_days(struct tm *tick_time) {
 static void set_hours_string(struct tm *tick_time) 
 {
   int timeHours = hours;
-  if(minutes >= 33) {
+  if(minutes > 33) {
     timeHours++;
   }
   if(timeHours == 1 || timeHours == 13){
@@ -278,19 +278,15 @@ static void update_task(struct tm *tick_time) {
       layer_set_update_proc(s_task_color_layer, task_background_blue);
     }
   } 
-  else if ((hours >= 15 && minutes >44)  && days >= 1 && days <= 5) {
+  else if ((hours >= 15 && hours <= 16 && minutes >44)  && days >= 1 && days <= 5) {
     if(!currentlyPrepTime) {
       vibes_double_pulse();
       setTasksToFalse();
       currentlyPrepTime = true;
       
-      //render small clock to make room for js data
       text_layer_set_text(s_task_layer, prepTime);
       layer_set_update_proc(s_task_color_layer, task_background_purple);
     }
-  }
-  else if ((hours == 16 && minutes ==14)  && days >= 1 && days <= 5) {
-    //render normal time again
   }
   else if ((hours == 16 && minutes <=59) && days >= 1 && days <= 5) 
   {
@@ -299,7 +295,6 @@ static void update_task(struct tm *tick_time) {
       setTasksToFalse();
       currentlyTravelTime = true;
 
-      
       text_layer_set_text(s_task_layer, travelTime);
       layer_set_update_proc(s_task_color_layer, task_background_orange);
     }
@@ -360,7 +355,7 @@ static void set_row_one() {
 //Second row of the time. Typically how much past the hour
 static void set_row_two() {
   if((minutes > 58 || minutes <= 3) && strcmp(timetextbufferRowTwo, o) !=0 ) {
-     snprintf(timetextbufferRowTwo, 2, o);
+     snprintf(timetextbufferRowTwo, 3, o);
   }
   else if(((minutes > 3 && minutes <= 23) || (minutes > 28 && minutes <= 33)) && strcmp(timetextbufferRowTwo, past) !=0 ) {
      snprintf(timetextbufferRowTwo, 5, past);
@@ -412,18 +407,18 @@ static void update_time() {
   
   update_task(tick_time);
   
-  if((hours == 15 && minutes ==44)&& days >= 1 && days <= 5) {
+  if ((hours == 15 && minutes >44)  && days >= 1 && days <= 5) {
     //clear text time
     text_layer_set_text(s_row_one_layer, strEmpty);
     text_layer_set_text(s_row_two_layer, strEmpty);
     text_layer_set_text(s_row_three_layer, strEmpty);
-  }
-  if (hours == 16 && minutes ==15  && days >= 1 && days <= 5) {
-    text_layer_set_text(s_time_layer, strEmpty);
-  }
-  if (((hours == 15 && minutes >=44) || (hours == 16 && minutes <=14)) && days >= 1 && days <= 5) {
-    //render small clock to make room for js data
     text_layer_set_text(s_time_layer, buffer);
+  }
+  if (hours >= 16 && minutes >=15  && days >= 1 && days <= 5) {
+    text_layer_set_text(s_time_layer, strEmpty);
+    set_row_one();
+    set_row_two();
+    set_row_three();
   }
   else {
     set_row_one();

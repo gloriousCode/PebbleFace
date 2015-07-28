@@ -9,6 +9,12 @@
     "resources": {
         "media": [
             {
+                "file": "images/rsz_gee_logo_latest_3.png",
+                "menuIcon": true,
+                "name": "LOGO",
+                "type": "png"
+            },
+            {
                 "characterRegex": "[0-9a-zA-Z - \\': ]",
                 "file": "fonts/imagine_font.ttf",
                 "name": "FONT_IMAGINE_36",
