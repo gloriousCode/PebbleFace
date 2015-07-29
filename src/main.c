@@ -1,23 +1,25 @@
 #include <pebble.h>
   
 static Window *s_main_window;
+
 static TextLayer *s_time_layer;
 static TextLayer *s_task_layer;
-
 static TextLayer *s_row_one_layer;
 static TextLayer *s_row_two_layer;
 static TextLayer *s_row_three_layer;
+static TextLayer *s_weather_layer;
 
 static GFont s_time_font;
 static GFont s_task_font;
 static GFont s_text_time_font;
 static GFont s_text_time_bold_font;
+static GFont s_weather_font;
 
 static Layer *s_task_color_layer;
 static GPath *s_task_color_path;
 static GPathInfo s_task_color_path_info = {
   .num_points = 4,
-  .points = (GPoint[]) { {00, 00},  {144, 00}, {144, 30}, {00, 30} }
+  .points = (GPoint[]) { {00, 00},  {144, 00}, {144, 34}, {00, 34} }
 };
 
 //Bools
@@ -193,31 +195,38 @@ static void set_hours_string(struct tm *tick_time)
 static void set_fonts() {
   s_time_font = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_IMAGINE_36));
   s_text_time_font =  fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT);
-  s_task_font =  fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD);
+  s_task_font =  fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD);
   s_text_time_bold_font = fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD);
+  s_weather_font = fonts_get_system_font(FONT_KEY_GOTHIC_14);
 }
 
 static void set_text_layer_bounds() {
   // Create micro time TextLayer
-  s_time_layer = text_layer_create(GRect(5, 52, 139, 50));
+  s_time_layer = text_layer_create(GRect(5, 40, 139, 50));
   text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_text_color(s_time_layer, GColorWhite);
   // Create task TextLayer
-  s_task_layer = text_layer_create(GRect(5, 0, 100, 24));
+  s_task_layer = text_layer_create(GRect(5, 0, 100, 30));
   text_layer_set_background_color(s_task_layer, GColorClear);
   text_layer_set_text_color(s_task_layer, GColorWhite);
   //Create fuzzy time row one layer
-  s_row_one_layer = text_layer_create(GRect(5, 30, 200, 100));
+  s_row_one_layer = text_layer_create(GRect(5, 34, 200, 100));
   text_layer_set_background_color(s_row_one_layer, GColorClear);
   text_layer_set_text_color(s_row_one_layer, GColorWhite);
   //Create fuzzy time row two layer
-  s_row_two_layer = text_layer_create(GRect(5, 70, 200, 100));
+  s_row_two_layer = text_layer_create(GRect(5, 74, 200, 100));
   text_layer_set_background_color(s_row_two_layer, GColorClear);
   text_layer_set_text_color(s_row_two_layer, GColorWhite);
   //Create fuzzy time row three layer
-  s_row_three_layer = text_layer_create(GRect(5, 110, 200, 100));
+  s_row_three_layer = text_layer_create(GRect(5, 114, 200, 100));
   text_layer_set_background_color(s_row_three_layer, GColorClear);
   text_layer_set_text_color(s_row_three_layer, GColorWhite);
+  //Create weather layer
+  s_weather_layer = text_layer_create(GRect(80, 14, 100, 30));
+  text_layer_set_background_color(s_weather_layer, GColorClear);
+  text_layer_set_text_color(s_weather_layer, GColorWhite);
+
+  
 }
 
 static void apply_fonts_set_alignment()  {
@@ -228,6 +237,7 @@ static void apply_fonts_set_alignment()  {
   text_layer_set_font(s_row_one_layer, s_text_time_font);
   text_layer_set_font(s_row_two_layer, s_text_time_font);
   text_layer_set_font(s_row_three_layer, s_text_time_font);
+  text_layer_set_font(s_weather_layer, s_weather_font);
   
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
   text_layer_set_text_alignment(s_task_layer, GTextAlignmentLeft);
@@ -235,10 +245,12 @@ static void apply_fonts_set_alignment()  {
   text_layer_set_text_alignment(s_row_one_layer, GTextAlignmentLeft);
   text_layer_set_text_alignment(s_row_two_layer, GTextAlignmentLeft);
   text_layer_set_text_alignment(s_row_three_layer, GTextAlignmentLeft);
+  text_layer_set_text_alignment(s_weather_layer, GTextAlignmentLeft);
 }
 
 static void add_small_time_layer_to_window(Window *window){
-   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_time_layer));
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_time_layer));
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_weather_layer));
 }
 
 static void add_text_time_layers_to_window(Window *window) {
@@ -267,7 +279,16 @@ static void setTasksToFalse() {
 
 //Perform certain functions depending on what time it is
 static void update_task(struct tm *tick_time) {
-  if (hours >= 8 && (hours <= 15 && minutes <=44)  && days >= 1 && days <= 5)
+  if ((hours >= 15 && hours <= 16) && minutes >44 && days >= 1 && days <= 5) {
+    if(!currentlyPrepTime) {
+      vibes_double_pulse();
+      setTasksToFalse();
+      currentlyPrepTime = true;
+      
+      text_layer_set_text(s_task_layer, prepTime);
+      layer_set_update_proc(s_task_color_layer, task_background_purple);
+    }
+  } else if ((hours >= 8 && hours <= 15) && days >= 1 && days <= 5)
   {
     if(!currentlyWorkTime) {   
       vibes_double_pulse();
@@ -278,17 +299,7 @@ static void update_task(struct tm *tick_time) {
       layer_set_update_proc(s_task_color_layer, task_background_blue);
     }
   } 
-  else if ((hours >= 15 && hours <= 16 && minutes >44)  && days >= 1 && days <= 5) {
-    if(!currentlyPrepTime) {
-      vibes_double_pulse();
-      setTasksToFalse();
-      currentlyPrepTime = true;
-      
-      text_layer_set_text(s_task_layer, prepTime);
-      layer_set_update_proc(s_task_color_layer, task_background_purple);
-    }
-  }
-  else if ((hours == 16 && minutes <=59) && days >= 1 && days <= 5) 
+  else if (hours == 16 && minutes <=59 && days >= 1 && days <= 5) 
   {
     if(!currentlyTravelTime) {
       vibes_double_pulse();
@@ -299,7 +310,7 @@ static void update_task(struct tm *tick_time) {
       layer_set_update_proc(s_task_color_layer, task_background_orange);
     }
   } 
-  else if ((days == 0 && hours >= 10 && hours < 15) || ((hours >=17  && minutes <=59) && (days == 1 || days == 3 || days == 4))) 
+  else if ((days == 0 && (hours >= 10 && hours < 15)) || (hours >=17  && minutes <=59 && (days == 1 || days == 3 || days == 4))) 
   {
     if(!currentlyGymTime) {
       vibes_double_pulse();
@@ -373,15 +384,15 @@ static void set_row_two() {
 }
 //Third row of the time. Usually the hour
 static void set_row_three() {
-  if((minutes > 58 || minutes <= 3) &&  strcmp(timetextbufferRowThree, clock) !=0 ) {
+  if((minutes > 58 || minutes <= 3) && strcmp(timetextbufferRowThree, clock) !=0 ) {
     text_layer_set_font(s_row_three_layer, s_text_time_font);
     snprintf(timetextbufferRowThree, 6, clock);
   }
-  else if((minutes > 23 && minutes <= 28) &&  strcmp(timetextbufferRowThree, five) !=0 ) {
+  else if((minutes > 23 && minutes <= 28) && strcmp(timetextbufferRowThree, five) !=0 ) {
     text_layer_set_font(s_row_three_layer, s_text_time_font);
     snprintf(timetextbufferRowThree, 5, five);
   }
-  else {
+  else if((minutes >3 && minutes <= 23) || (minutes > 28 && minutes <=58)) {
     text_layer_set_font(s_row_three_layer, s_text_time_bold_font);
     snprintf(timetextbufferRowThree, 8, timetextbuffer);
   }
@@ -443,6 +454,7 @@ static void main_window_unload(Window *window) {
   text_layer_destroy(s_row_one_layer);
   text_layer_destroy(s_row_two_layer);
   text_layer_destroy(s_row_three_layer);
+  text_layer_destroy(s_weather_layer);
 }
 
 static void main_window_load(Window *window) {   
@@ -451,6 +463,7 @@ static void main_window_load(Window *window) {
   set_fonts();
   apply_fonts_set_alignment();
   add_text_layers_to_window(window);
+  text_layer_set_text(s_weather_layer, "28");
 }
   
 static void init() {
