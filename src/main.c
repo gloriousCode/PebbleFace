@@ -8,12 +8,16 @@ static TextLayer *s_row_one_layer;
 static TextLayer *s_row_two_layer;
 static TextLayer *s_row_three_layer;
 static TextLayer *s_weather_layer;
+static TextLayer *s_day_of_month_layer;
+static TextLayer *s_month_layer;
 
 static GFont s_time_font;
 static GFont s_task_font;
 static GFont s_text_time_font;
 static GFont s_text_time_bold_font;
 static GFont s_weather_font;
+static GFont s_month_font;
+static GFont s_day_of_month_font;
 
 static Layer *s_task_color_layer;
 static GPath *s_task_color_path;
@@ -73,15 +77,29 @@ const char * freeTime = "FREEDOM";
 
 const char * strEmpty = "";
 
+const char * jan = "Jan";
+const char * feb = "Feb";
+const char * mar = "Mar";
+const char * apr = "Apr";
+const char * may = "May";
+const char * jun = "Jun";
+const char * jul = "Jul";
+const char * aug = "Aug";
+const char * sep = "Sep";
+const char * oct = "Oct";
+const char * nov = "Nov";
+const char * dec = "Dec";
+
 int days = 0;
 int minutes = 0;
 int hours = 0;
+int month = 0;
+int dayOfMonth = 0;
 
 //All the long lived buffers
 static char buffer[] = "0000";
-static char minuteStr[] = "00";
-static char hoursStr[] = "00";
-static char dayStr[] = "0";
+static char monthTextBuffer[] = "0000";
+static char dayOfMonthTextBuffer[] = "0000";
 static char timetextbuffer[] = "000000000";
 static char timetextbufferRowOne[] = "00000000";
 static char timetextbufferRowTwo[] = "00000000";
@@ -138,18 +156,23 @@ static void declare_drawing_layer(Window *window) {
 
 //Important mini methods to get the int values of time
 static void set_minutes(struct tm *tick_time) {
-  strftime(minuteStr, sizeof("00"), "%M", tick_time);
-  minutes = atoi(minuteStr); 
+  minutes = tick_time->tm_min;
 }
 
 static void set_hours(struct tm *tick_time) {
-  strftime(hoursStr, sizeof("00"), "%H", tick_time);
-  hours = atoi(hoursStr);
+  hours = tick_time->tm_hour;
 }
 
 static void set_days(struct tm *tick_time) {
-  strftime(dayStr, sizeof("0"), "%w", tick_time);
-  days = atoi(dayStr);
+  days = tick_time->tm_wday;
+}
+
+static void set_month(struct tm *tick_time) {
+  month = tick_time->tm_mon;
+}
+
+static void set_day_of_month(struct tm *tick_time) {
+  dayOfMonth = tick_time->tm_mday;
 }
 
 static void set_hours_string(struct tm *tick_time) 
@@ -203,6 +226,8 @@ static void set_fonts() {
   s_task_font =  fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD);
   s_text_time_bold_font = fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD);
   s_weather_font = fonts_get_system_font(FONT_KEY_GOTHIC_14);
+  s_month_font = fonts_get_system_font(FONT_KEY_GOTHIC_14);
+  s_day_of_month_font = fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD);
 }
 
 static void set_text_layer_bounds() {
@@ -227,11 +252,17 @@ static void set_text_layer_bounds() {
   text_layer_set_background_color(s_row_three_layer, GColorClear);
   text_layer_set_text_color(s_row_three_layer, GColorWhite);
   //Create weather layer
-  s_weather_layer = text_layer_create(GRect(80, 14, 100, 30));
+  s_weather_layer = text_layer_create(GRect(80, 14, 25, 25));
   text_layer_set_background_color(s_weather_layer, GColorClear);
   text_layer_set_text_color(s_weather_layer, GColorWhite);
-
-  
+  //Create day of month layer
+  s_day_of_month_layer = text_layer_create(GRect(110, 5, 25, 25));
+  text_layer_set_background_color(s_day_of_month_layer, GColorWhite);
+  text_layer_set_text_color(s_day_of_month_layer, GColorBlack);
+  //Create month layer
+  s_month_layer = text_layer_create(GRect(110, 14, 25, 25));
+  text_layer_set_background_color(s_month_layer, GColorClear);
+  text_layer_set_text_color(s_month_layer, GColorWhite);  
 }
 
 static void apply_fonts_set_alignment()  {
@@ -251,11 +282,12 @@ static void apply_fonts_set_alignment()  {
   text_layer_set_text_alignment(s_row_two_layer, GTextAlignmentLeft);
   text_layer_set_text_alignment(s_row_three_layer, GTextAlignmentLeft);
   text_layer_set_text_alignment(s_weather_layer, GTextAlignmentLeft);
+  text_layer_set_text_alignment(s_month_layer, GTextAlignmentCenter);
+  text_layer_set_text_alignment(s_day_of_month_layer, GTextAlignmentCenter);
 }
 
 static void add_small_time_layer_to_window(Window *window){
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_time_layer));
-  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_weather_layer));
 }
 
 static void add_text_time_layers_to_window(Window *window) {
@@ -269,6 +301,9 @@ static void add_text_layers_to_window(Window *window) {
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_task_layer));
   add_small_time_layer_to_window(window);
   add_text_time_layers_to_window(window);
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_weather_layer));
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_day_of_month_layer));
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_month_layer));
 }
 
 static void setTasksToFalse() {
@@ -418,8 +453,14 @@ static void update_time() {
   //Set all the time based values
   set_hours(tick_time);
   set_minutes(tick_time);
-  set_days(tick_time);
   set_hours_string(tick_time);
+  set_days(tick_time);
+  set_day_of_month(tick_time);
+  set_month(tick_time);
+  snprintf(dayOfMonthTextBuffer, "%d", dayOfMonth);
+  snprintf(monthTextBuffer, "%d", month);
+  text_layer_set_text(s_day_of_month_layer, dayOfMonthTextBuffer);
+  text_layer_set_text(s_month_layer, monthTextBuffer);
   
   update_task(tick_time);
   
@@ -443,8 +484,24 @@ static void update_time() {
   }
 }
 
+static void update_weather() {
+  // Get weather update every 30 minutes
+  time_t temp = time(NULL); 
+  struct tm *tick_time = localtime(&temp);
+  if(tick_time->tm_min % 30 == 0) {
+    // Begin dictionary
+    DictionaryIterator *iter;
+    app_message_outbox_begin(&iter);
+    // Add a key-value pair
+    dict_write_uint8(iter, 0, 0);
+    // Send the message!
+    app_message_outbox_send();
+  }
+}
+
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
   update_time();
+  update_weather();
 }
 
 static void main_window_unload(Window *window) {
@@ -460,6 +517,8 @@ static void main_window_unload(Window *window) {
   text_layer_destroy(s_row_two_layer);
   text_layer_destroy(s_row_three_layer);
   text_layer_destroy(s_weather_layer);
+  text_layer_destroy(s_month_layer);
+  text_layer_destroy(s_day_of_month_layer);
 }
 
 static void main_window_load(Window *window) {   
@@ -468,7 +527,6 @@ static void main_window_load(Window *window) {
   set_fonts();
   apply_fonts_set_alignment();
   add_text_layers_to_window(window);
-  text_layer_set_text(s_weather_layer, "28");
 }
 
 
@@ -541,7 +599,9 @@ static void init() {
   // Make sure the time is displayed from the start
   update_time();
   // Register with TickTimerService
+
   tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+
 }
 
 static void deinit() {
