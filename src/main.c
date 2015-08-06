@@ -9,16 +9,15 @@ static TextLayer *s_row_two_layer;
 static TextLayer *s_row_three_layer;
 static TextLayer *s_weather_layer;
 static TextLayer *s_day_of_month_layer;
-static TextLayer *s_month_layer;
 
 static GFont s_time_font;
 static GFont s_task_font;
 static GFont s_text_time_font;
 static GFont s_text_time_bold_font;
 static GFont s_weather_font;
-static GFont s_month_font;
 static GFont s_day_of_month_font;
 
+static Layer *s_calendar_rectangle_layer;
 static Layer *s_task_color_layer;
 static GPath *s_task_color_path;
 static GPathInfo s_task_color_path_info = {
@@ -73,37 +72,29 @@ const char * codeTime = "CODE";
 const char * studyTime = "STUDY";
 const char * readTime = "READ";
 const char * travelTime = "TRAVEL";
-const char * freeTime = "FREEDOM";
+const char * freeTime = "FREE";
 
 const char * strEmpty = "";
-
-const char * jan = "Jan";
-const char * feb = "Feb";
-const char * mar = "Mar";
-const char * apr = "Apr";
-const char * may = "May";
-const char * jun = "Jun";
-const char * jul = "Jul";
-const char * aug = "Aug";
-const char * sep = "Sep";
-const char * oct = "Oct";
-const char * nov = "Nov";
-const char * dec = "Dec";
 
 int days = 0;
 int minutes = 0;
 int hours = 0;
-int month = 0;
 int dayOfMonth = 0;
 
 //All the long lived buffers
 static char buffer[] = "0000";
-static char monthTextBuffer[] = "0000";
 static char dayOfMonthTextBuffer[] = "0000";
 static char timetextbuffer[] = "000000000";
 static char timetextbufferRowOne[] = "00000000";
 static char timetextbufferRowTwo[] = "00000000";
 static char timetextbufferRowThree[] = "00000000";
+
+static void calendar_background_rect(Layer *layer, GContext *gctxt) {
+    graphics_context_set_fill_color(gctxt, GColorWhite);
+    GRect rect = GRect(110, 5, 25, 25);
+    graphics_fill_rect(gctxt, rect, 3, GCornersAll);
+}
+
 
 //Method to draw layer
 static void task_background_red(Layer *layer, GContext *ctx) {
@@ -149,7 +140,7 @@ static void declare_drawing_layer(Window *window) {
   // Create Layer that the path will be drawn on
   s_task_color_layer = layer_create(bounds);
   layer_set_update_proc(s_task_color_layer, task_background_red);
-  layer_add_child(window_layer, s_task_color_layer);
+  
 }
 
 
@@ -165,10 +156,6 @@ static void set_hours(struct tm *tick_time) {
 
 static void set_days(struct tm *tick_time) {
   days = tick_time->tm_wday;
-}
-
-static void set_month(struct tm *tick_time) {
-  month = tick_time->tm_mon;
 }
 
 static void set_day_of_month(struct tm *tick_time) {
@@ -226,8 +213,7 @@ static void set_fonts() {
   s_task_font =  fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD);
   s_text_time_bold_font = fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD);
   s_weather_font = fonts_get_system_font(FONT_KEY_GOTHIC_14);
-  s_month_font = fonts_get_system_font(FONT_KEY_GOTHIC_14);
-  s_day_of_month_font = fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD);
+  s_day_of_month_font = fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD);
 }
 
 static void set_text_layer_bounds() {
@@ -257,12 +243,9 @@ static void set_text_layer_bounds() {
   text_layer_set_text_color(s_weather_layer, GColorWhite);
   //Create day of month layer
   s_day_of_month_layer = text_layer_create(GRect(110, 5, 25, 25));
-  text_layer_set_background_color(s_day_of_month_layer, GColorWhite);
+  text_layer_set_background_color(s_day_of_month_layer, GColorClear);
   text_layer_set_text_color(s_day_of_month_layer, GColorBlack);
-  //Create month layer
-  s_month_layer = text_layer_create(GRect(110, 14, 25, 25));
-  text_layer_set_background_color(s_month_layer, GColorClear);
-  text_layer_set_text_color(s_month_layer, GColorWhite);  
+
 }
 
 static void apply_fonts_set_alignment()  {
@@ -274,6 +257,7 @@ static void apply_fonts_set_alignment()  {
   text_layer_set_font(s_row_two_layer, s_text_time_font);
   text_layer_set_font(s_row_three_layer, s_text_time_font);
   text_layer_set_font(s_weather_layer, s_weather_font);
+   text_layer_set_font(s_day_of_month_layer, s_day_of_month_font);
   
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
   text_layer_set_text_alignment(s_task_layer, GTextAlignmentLeft);
@@ -282,7 +266,6 @@ static void apply_fonts_set_alignment()  {
   text_layer_set_text_alignment(s_row_two_layer, GTextAlignmentLeft);
   text_layer_set_text_alignment(s_row_three_layer, GTextAlignmentLeft);
   text_layer_set_text_alignment(s_weather_layer, GTextAlignmentLeft);
-  text_layer_set_text_alignment(s_month_layer, GTextAlignmentCenter);
   text_layer_set_text_alignment(s_day_of_month_layer, GTextAlignmentCenter);
 }
 
@@ -303,7 +286,6 @@ static void add_text_layers_to_window(Window *window) {
   add_text_time_layers_to_window(window);
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_weather_layer));
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_day_of_month_layer));
-  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_month_layer));
 }
 
 static void setTasksToFalse() {
@@ -350,7 +332,7 @@ static void update_task(struct tm *tick_time) {
       layer_set_update_proc(s_task_color_layer, task_background_orange);
     }
   } 
-  else if ((days == 0 && (hours >= 10 && hours < 15)) || (hours >=17  && minutes <=59 && (days == 1 || days == 3 || days == 4))) 
+  else if ((days == 0 && (hours >= 10 && hours < 15)) || (hours >=17  && minutes <=59 && hours <=19 && (days == 1 || days == 3 || days == 4))) 
   {
     if(!currentlyGymTime) {
       vibes_double_pulse();
@@ -377,7 +359,7 @@ static void update_task(struct tm *tick_time) {
 //First row of the time. Typically the minutes
 static void set_row_one() {
 
-  if((minutes > 58 || minutes <= 3)) {
+  if((minutes > 58 || minutes <= 3)|| (minutes > 23 && minutes <= 28)) {
     text_layer_set_font(s_row_one_layer, s_text_time_bold_font);
   }
   else {
@@ -456,15 +438,16 @@ static void update_time() {
   set_hours_string(tick_time);
   set_days(tick_time);
   set_day_of_month(tick_time);
-  set_month(tick_time);
-  snprintf(dayOfMonthTextBuffer, "%d", dayOfMonth);
-  snprintf(monthTextBuffer, "%d", month);
+  snprintf(dayOfMonthTextBuffer, sizeof(dayOfMonthTextBuffer), "%d", dayOfMonth);
   text_layer_set_text(s_day_of_month_layer, dayOfMonthTextBuffer);
-  text_layer_set_text(s_month_layer, monthTextBuffer);
+//  snprintf(dayOfMonthTextBuffer, "%d", dayOfMonth);
+ // snprintf(monthTextBuffer, "%d", month);
+//  text_layer_set_text(s_day_of_month_layer, dayOfMonthTextBuffer);
+ // text_layer_set_text(s_month_layer, monthTextBuffer);
   
   update_task(tick_time);
   
-  if ((hours == 15 && minutes >44)  && days >= 1 && days <= 5) {
+  if ((hours >= 15 && hours <= 16) && minutes >44 && days >= 1 && days <= 5) {
     //clear text time
     text_layer_set_text(s_row_one_layer, strEmpty);
     text_layer_set_text(s_row_two_layer, strEmpty);
@@ -517,12 +500,12 @@ static void main_window_unload(Window *window) {
   text_layer_destroy(s_row_two_layer);
   text_layer_destroy(s_row_three_layer);
   text_layer_destroy(s_weather_layer);
-  text_layer_destroy(s_month_layer);
   text_layer_destroy(s_day_of_month_layer);
 }
 
 static void main_window_load(Window *window) {   
   declare_drawing_layer(window);
+  layer_set_update_proc(s_calendar_rectangle_layer, calendar_background_rect);
   set_text_layer_bounds();
   set_fonts();
   apply_fonts_set_alignment();
