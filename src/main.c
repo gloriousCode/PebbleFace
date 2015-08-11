@@ -102,6 +102,7 @@ static void task_background_red(Layer *layer, GContext *ctx) {
   graphics_context_set_fill_color(ctx, GColorRed);
   // Draw the filled shape in above color
   gpath_draw_filled(ctx, s_task_color_path);
+   
 }
 
 static void task_background_blue(Layer *layer, GContext *ctx) {
@@ -132,6 +133,15 @@ static void task_background_green(Layer *layer, GContext *ctx) {
   gpath_draw_filled(ctx, s_task_color_path);
 }
 
+static void declare_calendar_layer(Window *window) {
+   Layer *window_layer = window_get_root_layer(window);
+  GRect bounds = layer_get_bounds(window_layer);
+  // Create Layer that the path will be drawn on
+  s_calendar_rectangle_layer = layer_create(bounds);
+  layer_set_update_proc(s_calendar_rectangle_layer, calendar_background_rect);
+  layer_add_child(window_layer, s_calendar_rectangle_layer);
+}
+
 static void declare_drawing_layer(Window *window) {
    Layer *window_layer = window_get_root_layer(window);
   GRect bounds = layer_get_bounds(window_layer);
@@ -140,7 +150,7 @@ static void declare_drawing_layer(Window *window) {
   // Create Layer that the path will be drawn on
   s_task_color_layer = layer_create(bounds);
   layer_set_update_proc(s_task_color_layer, task_background_red);
-  
+  layer_add_child(window_layer, s_task_color_layer);
 }
 
 
@@ -212,7 +222,7 @@ static void set_fonts() {
   s_text_time_font =  fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT);
   s_task_font =  fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD);
   s_text_time_bold_font = fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD);
-  s_weather_font = fonts_get_system_font(FONT_KEY_GOTHIC_14);
+  s_weather_font = fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD);
   s_day_of_month_font = fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD);
 }
 
@@ -242,7 +252,7 @@ static void set_text_layer_bounds() {
   text_layer_set_background_color(s_weather_layer, GColorClear);
   text_layer_set_text_color(s_weather_layer, GColorWhite);
   //Create day of month layer
-  s_day_of_month_layer = text_layer_create(GRect(110, 5, 25, 25));
+  s_day_of_month_layer = text_layer_create(GRect(111, 2, 25, 25));
   text_layer_set_background_color(s_day_of_month_layer, GColorClear);
   text_layer_set_text_color(s_day_of_month_layer, GColorBlack);
 
@@ -440,10 +450,7 @@ static void update_time() {
   set_day_of_month(tick_time);
   snprintf(dayOfMonthTextBuffer, sizeof(dayOfMonthTextBuffer), "%d", dayOfMonth);
   text_layer_set_text(s_day_of_month_layer, dayOfMonthTextBuffer);
-//  snprintf(dayOfMonthTextBuffer, "%d", dayOfMonth);
- // snprintf(monthTextBuffer, "%d", month);
-//  text_layer_set_text(s_day_of_month_layer, dayOfMonthTextBuffer);
- // text_layer_set_text(s_month_layer, monthTextBuffer);
+  
   
   update_task(tick_time);
   
@@ -505,11 +512,12 @@ static void main_window_unload(Window *window) {
 
 static void main_window_load(Window *window) {   
   declare_drawing_layer(window);
-  layer_set_update_proc(s_calendar_rectangle_layer, calendar_background_rect);
+  declare_calendar_layer(window);
   set_text_layer_bounds();
   set_fonts();
   apply_fonts_set_alignment();
   add_text_layers_to_window(window);
+  
 }
 
 
@@ -538,7 +546,7 @@ static char weather_layer_buffer[32];
     // Which key was received?
     switch(t->key) {
    case KEY_TEMPERATURE:
-  snprintf(temperature_buffer, sizeof(temperature_buffer), "%d*", (int)t->value->int32);
+  snprintf(temperature_buffer, sizeof(temperature_buffer), "%d", (int)t->value->int32);
   break;
 case KEY_CONDITIONS:
   snprintf(conditions_buffer, sizeof(conditions_buffer), "%s", t->value->cstring);
