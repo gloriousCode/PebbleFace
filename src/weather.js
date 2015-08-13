@@ -29,13 +29,14 @@ function getWeather() {
       console.log('Temperature is ' + temperature);
 
       // Conditions
-      var conditions = json.weather[0].main;      
+      var conditions = json.weather[0].main;     
+      var conditionId = json.weather[0].id;
       console.log('Conditions are ' + conditions);
       
       // Assemble dictionary using our keys
       var dictionary = {
         'KEY_TEMPERATURE': temperature,
-        'KEY_CONDITIONS': conditions
+        'KEY_CONDITIONS': conditionId
       };
       
       // Send to Pebble

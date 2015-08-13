@@ -19,6 +19,7 @@ static GFont s_day_of_month_font;
 
 static Layer *s_calendar_rectangle_layer;
 static Layer *s_task_color_layer;
+static Layer *s_weather_icon_layer;
 static GPath *s_task_color_path;
 static GPathInfo s_task_color_path_info = {
   .num_points = 4,
@@ -29,7 +30,7 @@ static GPathInfo s_task_color_path_info = {
 #define KEY_TEMPERATURE 0
 #define KEY_CONDITIONS 1
 
-
+int * conditionId = 0;
 //Bools
 bool currentlyWorkTime = false;
 bool currentlyPrepTime = false;
@@ -71,10 +72,15 @@ const char * gymTime = "GYM";
 const char * codeTime = "CODE";
 const char * studyTime = "STUDY";
 const char * readTime = "READ";
-const char * travelTime = "TRAVEL";
+const char * travelTime = "MOVE";
 const char * freeTime = "FREE";
 
 const char * strEmpty = "";
+
+
+//Weather
+GDrawCommandImage* Weather_currentWeatherIcon;
+
 
 int days = 0;
 int minutes = 0;
@@ -91,10 +97,71 @@ static char timetextbufferRowThree[] = "00000000";
 
 static void calendar_background_rect(Layer *layer, GContext *gctxt) {
     graphics_context_set_fill_color(gctxt, GColorWhite);
-    GRect rect = GRect(110, 5, 25, 25);
+    GRect rect = GRect(114, 5, 25, 25);
     graphics_fill_rect(gctxt, rect, 3, GCornersAll);
 }
 
+//Method to draw weather icon
+static void set_weather_icon(Layer *layer, GContext *ctx) {
+  uint32_t iconToLoad;
+  int something = (int)conditionId;
+  switch(something) {
+    //THUNDER
+    case 200: 
+    case 201: 
+    case 202:
+    case 210:
+    case 211: 
+    case 212:
+    case 221: 
+    case 230: 
+    case 231:
+    case 232: iconToLoad = RESOURCE_ID_WEATHER_THUNDERSTORM; break;
+    //DRIZZLE
+    case 300: 
+    case 301: 
+    case 302: 
+    case 310: 
+    case 311: 
+    case 312: 
+    case 313: 
+    case 314:
+    case 321: iconToLoad = RESOURCE_ID_WEATHER_DRIZZLE; break;
+    //RAIN
+    case 500: 
+    case 501: 
+    case 502: 
+    case 503: 
+    case 504: 
+    case 511: 
+    case 520: 
+    case 521: 
+    case 522: 
+    case 531: iconToLoad = RESOURCE_ID_WEATHER_RAIN; break;
+    //FOG
+    case 700: 
+    case 711: 
+    case 721: 
+    case 731: 
+    case 741: 
+    case 751: 
+    case 761: 
+    case 771: 
+    case 781: iconToLoad = RESOURCE_ID_WEATHER_PARTLY_CLOUDY; break;
+    //CLOUDY WITH A CHANCE OF BALLS
+    case 800: 
+    case 801: 
+    case 802: 
+    case 803: 
+    case 804: iconToLoad = RESOURCE_ID_WEATHER_CLOUDY; break;
+    default:  iconToLoad = RESOURCE_ID_WEATHER_CLEAR; break;
+  }
+    GDrawCommandImage* oldImage = Weather_currentWeatherIcon;
+    Weather_currentWeatherIcon = gdraw_command_image_create_with_resource(iconToLoad);
+    gdraw_command_image_destroy(oldImage);
+  //draw it once you go tthe layer
+    gdraw_command_image_draw(ctx, Weather_currentWeatherIcon, GPoint(58, 6));
+}
 
 //Method to draw layer
 static void task_background_red(Layer *layer, GContext *ctx) {
@@ -147,10 +214,14 @@ static void declare_drawing_layer(Window *window) {
   GRect bounds = layer_get_bounds(window_layer);
   // Create GPath object
   s_task_color_path = gpath_create(&s_task_color_path_info);
+
   // Create Layer that the path will be drawn on
   s_task_color_layer = layer_create(bounds);
+  s_weather_icon_layer = layer_create(bounds);
+  
   layer_set_update_proc(s_task_color_layer, task_background_red);
   layer_add_child(window_layer, s_task_color_layer);
+  layer_add_child(window_layer, s_weather_icon_layer);
 }
 
 
@@ -222,8 +293,8 @@ static void set_fonts() {
   s_text_time_font =  fonts_get_system_font(FONT_KEY_BITHAM_42_LIGHT);
   s_task_font =  fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD);
   s_text_time_bold_font = fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD);
-  s_weather_font = fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD);
-  s_day_of_month_font = fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD);
+  s_weather_font = fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD);
+  s_day_of_month_font = fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD);
 }
 
 static void set_text_layer_bounds() {
@@ -248,11 +319,11 @@ static void set_text_layer_bounds() {
   text_layer_set_background_color(s_row_three_layer, GColorClear);
   text_layer_set_text_color(s_row_three_layer, GColorWhite);
   //Create weather layer
-  s_weather_layer = text_layer_create(GRect(80, 14, 25, 25));
+  s_weather_layer = text_layer_create(GRect(85, 2, 25, 25));
   text_layer_set_background_color(s_weather_layer, GColorClear);
   text_layer_set_text_color(s_weather_layer, GColorWhite);
   //Create day of month layer
-  s_day_of_month_layer = text_layer_create(GRect(111, 2, 25, 25));
+  s_day_of_month_layer = text_layer_create(GRect(114, 2, 25, 25));
   text_layer_set_background_color(s_day_of_month_layer, GColorClear);
   text_layer_set_text_color(s_day_of_month_layer, GColorBlack);
 
@@ -499,6 +570,7 @@ static void main_window_unload(Window *window) {
   
   layer_destroy(s_task_color_layer);
   gpath_destroy(s_task_color_path);
+  layer_destroy(s_weather_icon_layer);
 
   // Destroy TextLayer
   text_layer_destroy(s_time_layer);
@@ -537,7 +609,9 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
   // Store incoming information
 static char temperature_buffer[8];
 static char conditions_buffer[32];
+static char condition_layer_buffer[32];
 static char weather_layer_buffer[32];
+
 // Read first item
   Tuple *t = dict_read_first(iterator);
 
@@ -549,7 +623,7 @@ static char weather_layer_buffer[32];
   snprintf(temperature_buffer, sizeof(temperature_buffer), "%d", (int)t->value->int32);
   break;
 case KEY_CONDITIONS:
-  snprintf(conditions_buffer, sizeof(conditions_buffer), "%s", t->value->cstring);
+  conditionId = (int *)t->value->int32;
   break;
 default:
   APP_LOG(APP_LOG_LEVEL_ERROR, "Key %d not recognized!", (int)t->key);
@@ -561,6 +635,7 @@ default:
   // Assemble full string and display
   snprintf(weather_layer_buffer, sizeof(weather_layer_buffer),  temperature_buffer);
   text_layer_set_text(s_weather_layer, weather_layer_buffer);
+  layer_set_update_proc(s_weather_icon_layer, set_weather_icon);
 }
 
 

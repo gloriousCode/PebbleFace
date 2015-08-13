@@ -12,6 +12,36 @@
     "resources": {
         "media": [
             {
+                "file": "data/HEAVY_RAIN.pdc",
+                "name": "WEATHER_RAIN",
+                "type": "raw"
+            },
+            {
+                "file": "data/LIGHT_RAIN.pdc",
+                "name": "WEATHER_DRIZZLE",
+                "type": "raw"
+            },
+            {
+                "file": "data/PARTLY_CLOUDY.pdc",
+                "name": "WEATHER_PARTLY_CLOUDY",
+                "type": "raw"
+            },
+            {
+                "file": "data/THUNDERSTORM.pdc",
+                "name": "WEATHER_THUNDERSTORM",
+                "type": "raw"
+            },
+            {
+                "file": "data/CLEAR_DAY.pdc",
+                "name": "WEATHER_CLEAR",
+                "type": "raw"
+            },
+            {
+                "file": "data/CLOUDY_DAY.pdc",
+                "name": "WEATHER_CLOUDY",
+                "type": "raw"
+            },
+            {
                 "file": "images/rsz_gee_logo_latest_3.png",
                 "menuIcon": true,
                 "name": "LOGO",
