@@ -12,6 +12,11 @@
     "resources": {
         "media": [
             {
+                "file": "images/Capture.PNG",
+                "name": "CURRENT_APPEARANCE",
+                "type": "png"
+            },
+            {
                 "file": "data/HEAVY_RAIN.pdc",
                 "name": "WEATHER_RAIN",
                 "type": "raw"
