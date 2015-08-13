@@ -1,6 +1,6 @@
 # PebbleFace
 First time making a watchface for Pebble Time
-
+<img src="/resources/images/Capture.PNG" width="179" height="206">
 Concept
 The idea of this watchface is to deliver information that I find useful, when it is useful to me.
 Eg at 15:30 show me upcoming bus times
