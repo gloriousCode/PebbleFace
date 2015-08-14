@@ -12,6 +12,21 @@
     "resources": {
         "media": [
             {
+                "file": "data/DATE_BG.pdc",
+                "name": "CALENDAR_BACKGROUND",
+                "type": "raw"
+            },
+            {
+                "file": "data/PARTLY_CLOUDY_NIGHT.pdc",
+                "name": "WEATHER_PARTLY_CLOUDY_NIGHT",
+                "type": "raw"
+            },
+            {
+                "file": "data/CLEAR_NIGHT.pdc",
+                "name": "WEATHER_CLEAR_NIGHT",
+                "type": "raw"
+            },
+            {
                 "file": "images/rsz_gee_logo_latest_3.png",
                 "menuIcon": true,
                 "name": "LOGO",

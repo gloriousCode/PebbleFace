@@ -17,9 +17,9 @@ static GFont s_text_time_bold_font;
 static GFont s_weather_font;
 static GFont s_day_of_month_font;
 
-static Layer *s_calendar_rectangle_layer;
 static Layer *s_task_color_layer;
 static Layer *s_weather_icon_layer;
+static Layer *s_calendar_background_layer;
 static GPath *s_task_color_path;
 static GPathInfo s_task_color_path_info = {
   .num_points = 4,
@@ -77,10 +77,12 @@ const char * freeTime = "FREE";
 
 const char * strEmpty = "";
 
+GColor taskColour;
 
 //Weather
 GDrawCommandImage* Weather_currentWeatherIcon;
-
+//Calendar
+GDrawCommandImage* calendar_background;
 
 int days = 0;
 int minutes = 0;
@@ -94,12 +96,6 @@ static char timetextbuffer[] = "000000000";
 static char timetextbufferRowOne[] = "00000000";
 static char timetextbufferRowTwo[] = "00000000";
 static char timetextbufferRowThree[] = "00000000";
-
-static void calendar_background_rect(Layer *layer, GContext *gctxt) {
-    graphics_context_set_fill_color(gctxt, GColorWhite);
-    GRect rect = GRect(114, 5, 25, 25);
-    graphics_fill_rect(gctxt, rect, 3, GCornersAll);
-}
 
 //Method to draw weather icon
 static void set_weather_icon(Layer *layer, GContext *ctx) {
@@ -147,11 +143,11 @@ static void set_weather_icon(Layer *layer, GContext *ctx) {
     case 751: 
     case 761: 
     case 771: 
-    case 781: iconToLoad = RESOURCE_ID_WEATHER_PARTLY_CLOUDY; break;
+    case 781: iconToLoad = hours >= 18? RESOURCE_ID_WEATHER_PARTLY_CLOUDY_NIGHT :RESOURCE_ID_WEATHER_PARTLY_CLOUDY; break;
     //CLOUDY WITH A CHANCE OF BALLS
     case 800: 
     case 801: 
-    case 802: iconToLoad = RESOURCE_ID_WEATHER_CLEAR; break;
+    case 802: iconToLoad = hours >= 18? RESOURCE_ID_WEATHER_CLEAR_NIGHT : RESOURCE_ID_WEATHER_CLEAR; break;
     case 803: 
     case 804: iconToLoad = RESOURCE_ID_WEATHER_CLOUDY; break;
     default:  iconToLoad = RESOURCE_ID_WEATHER_CLEAR; break;
@@ -163,50 +159,17 @@ static void set_weather_icon(Layer *layer, GContext *ctx) {
     gdraw_command_image_draw(ctx, Weather_currentWeatherIcon, GPoint(86, 6));
 }
 
+static void render_calendar_background(Layer *layer, GContext *ctx) {
+    calendar_background = gdraw_command_image_create_with_resource(RESOURCE_ID_CALENDAR_BACKGROUND);
+    gdraw_command_image_draw(ctx, calendar_background, GPoint(114, 4));
+}
+
 //Method to draw layer
-static void task_background_red(Layer *layer, GContext *ctx) {
+static void task_background_color(Layer *layer, GContext *ctx) {
   // Set the color using RGB values
-  graphics_context_set_fill_color(ctx, GColorRed);
+  graphics_context_set_fill_color(ctx, taskColour);
   // Draw the filled shape in above color
   gpath_draw_filled(ctx, s_task_color_path);
-   
-}
-
-static void task_background_blue(Layer *layer, GContext *ctx) {
-  // Set the color using RGB values
-  graphics_context_set_fill_color(ctx, GColorBlueMoon);
-  // Draw the filled shape in above color
-  gpath_draw_filled(ctx, s_task_color_path);
-}
-
-static void task_background_orange(Layer *layer, GContext *ctx) {
-  // Set the color using RGB values
-  graphics_context_set_fill_color(ctx, GColorOrange);
-  // Draw the filled shape in above color
-  gpath_draw_filled(ctx, s_task_color_path);
-}
-
-static void task_background_purple(Layer *layer, GContext *ctx) {
-  // Set the color using RGB values
-  graphics_context_set_fill_color(ctx, GColorPurple);
-  // Draw the filled shape in above color
-  gpath_draw_filled(ctx, s_task_color_path);
-}
-
-static void task_background_green(Layer *layer, GContext *ctx) {
-  // Set the color using RGB values
-  graphics_context_set_fill_color(ctx, GColorIslamicGreen);
-  // Draw the filled shape in above color
-  gpath_draw_filled(ctx, s_task_color_path);
-}
-
-static void declare_calendar_layer(Window *window) {
-   Layer *window_layer = window_get_root_layer(window);
-  GRect bounds = layer_get_bounds(window_layer);
-  // Create Layer that the path will be drawn on
-  s_calendar_rectangle_layer = layer_create(bounds);
-  layer_set_update_proc(s_calendar_rectangle_layer, calendar_background_rect);
-  layer_add_child(window_layer, s_calendar_rectangle_layer);
 }
 
 static void declare_drawing_layer(Window *window) {
@@ -218,10 +181,13 @@ static void declare_drawing_layer(Window *window) {
   // Create Layer that the path will be drawn on
   s_task_color_layer = layer_create(bounds);
   s_weather_icon_layer = layer_create(bounds);
+  s_calendar_background_layer = layer_create(bounds);
   
-  layer_set_update_proc(s_task_color_layer, task_background_red);
+  taskColour = GColorRed;
+  layer_set_update_proc(s_task_color_layer, task_background_color);
   layer_add_child(window_layer, s_task_color_layer);
   layer_add_child(window_layer, s_weather_icon_layer);
+  layer_add_child(window_layer, s_calendar_background_layer);
 }
 
 
@@ -389,7 +355,8 @@ static void update_task(struct tm *tick_time) {
       currentlyPrepTime = true;
       
       text_layer_set_text(s_task_layer, prepTime);
-      layer_set_update_proc(s_task_color_layer, task_background_purple);
+      taskColour = GColorPurple;
+      layer_set_update_proc(s_task_color_layer, task_background_color);
     }
   } else if ((hours >= 8 && hours <= 15) && days >= 1 && days <= 5)
   {
@@ -399,7 +366,8 @@ static void update_task(struct tm *tick_time) {
       currentlyWorkTime = true;
       
       text_layer_set_text(s_task_layer, workTime);
-      layer_set_update_proc(s_task_color_layer, task_background_blue);
+      taskColour = GColorBlueMoon;
+      layer_set_update_proc(s_task_color_layer, task_background_color);
     }
   } 
   else if (hours == 16 && minutes <=59 && days >= 1 && days <= 5) 
@@ -410,7 +378,8 @@ static void update_task(struct tm *tick_time) {
       currentlyTravelTime = true;
 
       text_layer_set_text(s_task_layer, travelTime);
-      layer_set_update_proc(s_task_color_layer, task_background_orange);
+      taskColour = GColorOrange;
+      layer_set_update_proc(s_task_color_layer, task_background_color);
     }
   } 
   else if ((days == 0 && (hours >= 10 && hours < 15)) || (hours >=17  && minutes <=59 && hours <=19 && (days == 1 || days == 3 || days == 4))) 
@@ -421,7 +390,8 @@ static void update_task(struct tm *tick_time) {
       currentlyGymTime = true;
       
       text_layer_set_text(s_task_layer, gymTime);
-      layer_set_update_proc(s_task_color_layer, task_background_red);
+      taskColour = GColorRed;
+      layer_set_update_proc(s_task_color_layer, task_background_color);
     }
   }
   else 
@@ -432,7 +402,8 @@ static void update_task(struct tm *tick_time) {
       currentlyFreeTime = true;
       
       text_layer_set_text(s_task_layer,freeTime);
-      layer_set_update_proc(s_task_color_layer, task_background_green);
+      taskColour = GColorIslamicGreen;
+      layer_set_update_proc(s_task_color_layer, task_background_color);
     }
   }
 }
@@ -571,6 +542,7 @@ static void main_window_unload(Window *window) {
   layer_destroy(s_task_color_layer);
   gpath_destroy(s_task_color_path);
   layer_destroy(s_weather_icon_layer);
+  layer_destroy(s_calendar_background_layer);
 
   // Destroy TextLayer
   text_layer_destroy(s_time_layer);
@@ -584,7 +556,6 @@ static void main_window_unload(Window *window) {
 
 static void main_window_load(Window *window) {   
   declare_drawing_layer(window);
-  declare_calendar_layer(window);
   set_text_layer_bounds();
   set_fonts();
   apply_fonts_set_alignment();
@@ -636,6 +607,7 @@ default:
   snprintf(weather_layer_buffer, sizeof(weather_layer_buffer),  temperature_buffer);
   text_layer_set_text(s_weather_layer, weather_layer_buffer);
   layer_set_update_proc(s_weather_icon_layer, set_weather_icon);
+  layer_set_update_proc(s_calendar_background_layer, render_calendar_background);
 }
 
 
