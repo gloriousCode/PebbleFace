@@ -12,9 +12,21 @@
     "resources": {
         "media": [
             {
-                "file": "images/Capture.PNG",
-                "name": "CURRENT_APPEARANCE",
+                "file": "images/rsz_gee_logo_latest_3.png",
+                "menuIcon": true,
+                "name": "LOGO",
                 "type": "png"
+            },
+            {
+                "file": "data/CLOUDY_DAY.pdc",
+                "name": "WEATHER_CLOUDY",
+                "type": "raw"
+            },
+            {
+                "characterRegex": "[0-9a-zA-Z - \\': ]",
+                "file": "fonts/imagine_font.ttf",
+                "name": "FONT_IMAGINE_36",
+                "type": "font"
             },
             {
                 "file": "data/HEAVY_RAIN.pdc",
@@ -24,11 +36,6 @@
             {
                 "file": "data/LIGHT_RAIN.pdc",
                 "name": "WEATHER_DRIZZLE",
-                "type": "raw"
-            },
-            {
-                "file": "data/PARTLY_CLOUDY.pdc",
-                "name": "WEATHER_PARTLY_CLOUDY",
                 "type": "raw"
             },
             {
@@ -42,21 +49,14 @@
                 "type": "raw"
             },
             {
-                "file": "data/CLOUDY_DAY.pdc",
-                "name": "WEATHER_CLOUDY",
+                "file": "data/PARTLY_CLOUDY.pdc",
+                "name": "WEATHER_PARTLY_CLOUDY",
                 "type": "raw"
             },
             {
-                "file": "images/rsz_gee_logo_latest_3.png",
-                "menuIcon": true,
-                "name": "LOGO",
+                "file": "images/Capture.PNG",
+                "name": "CURRENT_APPEARANCE",
                 "type": "png"
-            },
-            {
-                "characterRegex": "[0-9a-zA-Z - \\': ]",
-                "file": "fonts/imagine_font.ttf",
-                "name": "FONT_IMAGINE_36",
-                "type": "font"
             }
         ]
     },
