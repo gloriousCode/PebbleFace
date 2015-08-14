@@ -299,7 +299,7 @@ static void set_fonts() {
 
 static void set_text_layer_bounds() {
   // Create micro time TextLayer
-  s_time_layer = text_layer_create(GRect(5, 40, 139, 50));
+  s_time_layer = text_layer_create(GRect(5, 34, 139, 50));
   text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_text_color(s_time_layer, GColorWhite);
   // Create task TextLayer
@@ -532,7 +532,7 @@ static void update_time() {
     text_layer_set_text(s_row_three_layer, strEmpty);
     text_layer_set_text(s_time_layer, buffer);
   }
-  if (hours >= 16 && minutes >=15  && days >= 1 && days <= 5) {
+  else if (hours >= 16 && minutes >=15  && days >= 1 && days <= 5) {
     text_layer_set_text(s_time_layer, strEmpty);
     set_row_one();
     set_row_two();
