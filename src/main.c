@@ -156,7 +156,7 @@ static void set_weather_icon(Layer *layer, GContext *ctx) {
     Weather_currentWeatherIcon = gdraw_command_image_create_with_resource(iconToLoad);
     gdraw_command_image_destroy(oldImage);
   //draw it once you go tthe layer
-    gdraw_command_image_draw(ctx, Weather_currentWeatherIcon, GPoint(86, 6));
+    gdraw_command_image_draw(ctx, Weather_currentWeatherIcon, GPoint(85, 6));
 }
 
 static void render_calendar_background(Layer *layer, GContext *ctx) {
@@ -285,7 +285,7 @@ static void set_text_layer_bounds() {
   text_layer_set_background_color(s_row_three_layer, GColorClear);
   text_layer_set_text_color(s_row_three_layer, GColorWhite);
   //Create weather layer
-  s_weather_layer = text_layer_create(GRect(66, 2, 25, 25));
+  s_weather_layer = text_layer_create(GRect(65, 2, 25, 25));
   text_layer_set_background_color(s_weather_layer, GColorClear);
   text_layer_set_text_color(s_weather_layer, GColorWhite);
   //Create day of month layer
