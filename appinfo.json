@@ -16,6 +16,11 @@
     "resources": {
         "media": [
             {
+                "file": "images/Capture.PNG",
+                "name": "CURRENT_APPEARANCE",
+                "type": "png"
+            },
+            {
                 "file": "images/rsz_gee_logo_latest_3.png",
                 "menuIcon": true,
                 "name": "LOGO",
@@ -71,11 +76,6 @@
                 "file": "data/PARTLY_CLOUDY.pdc",
                 "name": "WEATHER_PARTLY_CLOUDY",
                 "type": "raw"
-            },
-            {
-                "file": "images/Capture.PNG",
-                "name": "CURRENT_APPEARANCE",
-                "type": "png"
             }
         ]
     },
