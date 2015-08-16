@@ -19,3 +19,21 @@ Eg Pin task telling me to go to the gym today
 
 
 Finally, I'm making this watchface open source so that others find it easy to develop for Pebble. It will be split up into small tasks as much as possible, so people can use only what's relevant to them
+
+
+## Current Features
++ Colloquial time
++ Time based events (GYM, FREE TIME, MEDITATION)
++ Weather temp and condition updates / 30 minutes
++ Minimised time interface when new data needs to be rendered
++ Bus/Train times displayed at TRAVEL and PREP times
+
+## Planned Features
++ Live traffic incident updates using NSW transport data program
++ Timeline pins
++ Reorganisation of code
+
+## Super cool but not likely features
++ Settings support for custom events at custom times using custom colours
++ Make sense of Tripviews public facing JSON responses and get realtime transport information
++ Icons/Animations when a task changes (like a picture of weights when its gym time)
