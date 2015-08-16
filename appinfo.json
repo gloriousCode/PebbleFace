@@ -1,7 +1,11 @@
 {
     "appKeys": {
         "KEY_CONDITIONS": 1,
-        "KEY_TEMPERATURE": 0
+        "KEY_TEMPERATURE": 0,
+        "KEY_TRAFFIC_DIRECTION": 5,
+        "KEY_TRAFFIC_TITLE": 2,
+        "KEY_TRAFFIC_WARNING_ONE": 3,
+        "KEY_TRAFFIC_WARNING_TWO": 4
     },
     "capabilities": [
         ""
@@ -11,6 +15,12 @@
     "projectType": "native",
     "resources": {
         "media": [
+            {
+                "file": "images/rsz_gee_logo_latest_3.png",
+                "menuIcon": true,
+                "name": "LOGO",
+                "type": "png"
+            },
             {
                 "file": "data/DATE_BG.pdc",
                 "name": "CALENDAR_BACKGROUND",
@@ -25,12 +35,6 @@
                 "file": "data/CLEAR_NIGHT.pdc",
                 "name": "WEATHER_CLEAR_NIGHT",
                 "type": "raw"
-            },
-            {
-                "file": "images/rsz_gee_logo_latest_3.png",
-                "menuIcon": true,
-                "name": "LOGO",
-                "type": "png"
             },
             {
                 "file": "data/CLOUDY_DAY.pdc",

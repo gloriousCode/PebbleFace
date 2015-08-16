@@ -646,6 +646,7 @@ static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
 
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   // Store incoming information
+APP_LOG(APP_LOG_LEVEL_ERROR, context);
 static char temperature_buffer[8];
 static char conditions_buffer[32];
 static char condition_layer_buffer[32];
