@@ -2,7 +2,7 @@
 First time making a watchface for Pebble Time
 
 
-<img src="/resources/images/Capture.PNG" width="179" height="206" />
+<img src="/resources/images/Capture.PNG" width="179" height="206" /><img src="/resources/images/prep.PNG" width="151" height="171" />
 
 
 Concept
