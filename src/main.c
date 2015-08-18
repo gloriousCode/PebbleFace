@@ -414,7 +414,7 @@ static void clear_travel_row_text() {
 //Perform certain functions depending on what time it is
 static void update_task(struct tm *tick_time) {
   // Morning prep time
-  if (((hours >= 5 && minutes >55) || (hours <= 6 && minutes <= 15)) && days >= 1 && days <= 5) {
+  if (((hours >= 5 && minutes >55) || (hours <= 6 && minutes <= 55)) && days >= 1 && days <= 5) {
     if(!currentlyPrepTime) {
       vibes_double_pulse();
       setTasksToFalse();
