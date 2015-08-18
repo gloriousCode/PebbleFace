@@ -49,6 +49,7 @@ bool currentlyTravelTime = false;
 bool currentlyFreeTime = false;
 bool currentlyMeditating = false;
 
+
 //Constants
 const char * clock = "clock";
 const char * o = "o'";
@@ -389,11 +390,18 @@ static void setTasksToFalse() {
   currentlyMeditating = false;
 }
 
+static void set_morning_travel_row_text() {
+  text_layer_set_text(s_travel_row_one_layer,   "BER    GOS    OUR");
+  text_layer_set_text(s_travel_row_two_layer,   "627    615    553");
+  text_layer_set_text(s_travel_row_three_layer, "654    624    614");
+  text_layer_set_text(s_travel_row_four_layer,  "657    635    618");
+}
+
 static void set_travel_row_text() {
-  text_layer_set_text(s_travel_row_one_layer,   "M20   BER   GOS");
-  text_layer_set_text(s_travel_row_two_layer,   "355   415C  415C");
-  text_layer_set_text(s_travel_row_three_layer, "407   432R  432R");
-  text_layer_set_text(s_travel_row_four_layer,  "417   445C  445C");
+  text_layer_set_text(s_travel_row_one_layer,   "M20    BER    GOS");
+  text_layer_set_text(s_travel_row_two_layer,   "355    415C   415C");
+  text_layer_set_text(s_travel_row_three_layer, "407    432R   432R");
+  text_layer_set_text(s_travel_row_four_layer,  "417    445C   445C");
 }
 
 static void clear_travel_row_text() {
@@ -405,7 +413,34 @@ static void clear_travel_row_text() {
 
 //Perform certain functions depending on what time it is
 static void update_task(struct tm *tick_time) {
-  if ((hours >= 15 && hours <= 16) && minutes >44 && days >= 1 && days <= 5) {
+  // Morning prep time
+  if (((hours >= 5 && minutes >55) || (hours <= 6 && minutes <= 15)) && days >= 1 && days <= 5) {
+    if(!currentlyPrepTime) {
+      vibes_double_pulse();
+      setTasksToFalse();
+      currentlyPrepTime = true;
+      
+      text_layer_set_text(s_task_layer, prepTime);
+      taskColour = GColorPurple;
+      layer_set_update_proc(s_task_color_layer, task_background_color);
+      set_morning_travel_row_text();
+    }
+  }
+  // Morning reading time
+  else if ((hours <= 8 && hours >= 7) && (days >= 1 && days <= 5)) {
+    if(!currentlyReadTime) {
+      vibes_double_pulse();
+      setTasksToFalse();
+      currentlyReadTime = true;
+      
+      text_layer_set_text(s_task_layer, readTime);
+      taskColour = GColorDukeBlue;
+      layer_set_update_proc(s_task_color_layer, task_background_color);
+      clear_travel_row_text();
+    }
+  }
+  // Afternoon prep time
+  else if ((hours >= 15 && hours <= 16) && minutes >44 && days >= 1 && days <= 5) {
     if(!currentlyPrepTime) {
       vibes_double_pulse();
       setTasksToFalse();
@@ -416,7 +451,9 @@ static void update_task(struct tm *tick_time) {
       layer_set_update_proc(s_task_color_layer, task_background_color);
       set_travel_row_text();
     }
-  } else if ((hours >= 8 && hours <= 15) && days >= 1 && days <= 5)
+  } 
+  // Work time
+  else if ((hours >= 8 && hours <= 15) && days >= 1 && days <= 5)
   {
     if(!currentlyWorkTime) {
       text_layer_set_text(s_time_layer, strEmpty);
@@ -427,8 +464,10 @@ static void update_task(struct tm *tick_time) {
       text_layer_set_text(s_task_layer, workTime);
       taskColour = GColorBlueMoon;
       layer_set_update_proc(s_task_color_layer, task_background_color);
+      clear_travel_row_text();
     }
   } 
+  // Travel time
   else if (hours == 16 && minutes <=59 && days >= 1 && days <= 5) 
   {
     if(!currentlyTravelTime) {
@@ -442,6 +481,7 @@ static void update_task(struct tm *tick_time) {
       set_travel_row_text();
     }
   } 
+  // Gym time
   else if ((days == 0 && (hours >= 10 && hours < 15)) || (hours >=17  && minutes <=59 && hours <=19 && (days == 1 || days == 3 || days == 4))) 
   {
     if(!currentlyGymTime) {
@@ -456,6 +496,7 @@ static void update_task(struct tm *tick_time) {
       clear_travel_row_text();
     }
   }
+  // Meditation time
   else if(hours == 20 && (minutes >= 29 || minutes <= 49))
     {
      if(!currentlyMeditating) {
@@ -470,6 +511,7 @@ static void update_task(struct tm *tick_time) {
        clear_travel_row_text();
     }
   }
+  //Freeeeee time
   else 
   {
     if(!currentlyFreeTime) {
