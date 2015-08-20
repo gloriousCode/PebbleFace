@@ -36,7 +36,7 @@ static GPathInfo s_task_color_path_info = {
 //Cool sys variables
 #define KEY_TEMPERATURE 0
 #define KEY_CONDITIONS 1
-
+ 
 int * conditionId = 0;
 //Bools
 bool currentlyWorkTime = false;
@@ -199,8 +199,8 @@ static void declare_drawing_layer(Window *window) {
   layer_add_child(window_layer, s_weather_icon_layer);
   layer_add_child(window_layer, s_calendar_background_layer);
   
-  layer_set_update_proc(s_weather_icon_layer, set_weather_icon);
-  layer_set_update_proc(s_calendar_background_layer, render_calendar_background);
+  //layer_set_update_proc(s_weather_icon_layer, set_weather_icon);
+  //layer_set_update_proc(s_calendar_background_layer, render_calendar_background);
 }
 
 
@@ -720,7 +720,6 @@ default:
   snprintf(weather_layer_buffer, sizeof(weather_layer_buffer),  temperature_buffer);
   text_layer_set_text(s_weather_layer, weather_layer_buffer);
   layer_set_update_proc(s_weather_icon_layer, set_weather_icon);
-  layer_set_update_proc(s_calendar_background_layer, render_calendar_background);
 }
 
 
