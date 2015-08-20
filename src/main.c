@@ -199,8 +199,8 @@ static void declare_drawing_layer(Window *window) {
   layer_add_child(window_layer, s_weather_icon_layer);
   layer_add_child(window_layer, s_calendar_background_layer);
   
-  //layer_set_update_proc(s_weather_icon_layer, set_weather_icon);
-  //layer_set_update_proc(s_calendar_background_layer, render_calendar_background);
+  layer_set_update_proc(s_weather_icon_layer, set_weather_icon);
+  layer_set_update_proc(s_calendar_background_layer, render_calendar_background);
 }
 
 
