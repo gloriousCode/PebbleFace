@@ -36,7 +36,7 @@ static GPathInfo s_task_color_path_info = {
 //Cool sys variables
 #define KEY_TEMPERATURE 0
 #define KEY_CONDITIONS 1
- 
+  
 int * conditionId = 0;
 //Bools
 bool currentlyWorkTime = false;
