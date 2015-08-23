@@ -36,6 +36,10 @@ static GPathInfo s_task_color_path_info = {
 //Cool sys variables
 #define KEY_TEMPERATURE 0
 #define KEY_CONDITIONS 1
+#define KEY_TRAFFIC_TITLE 2
+#define KEY_TRAFFIC_WARNING_ONE 3
+#define KEY_TRAFFIC_WARNING_TWO 4
+#define KEY_TRAFFIC_DIRECTION 5
   
 int * conditionId = 0;
 //Bools
@@ -165,7 +169,7 @@ static void set_weather_icon(Layer *layer, GContext *ctx) {
     GDrawCommandImage* oldImage = Weather_currentWeatherIcon;
     Weather_currentWeatherIcon = gdraw_command_image_create_with_resource(iconToLoad);
     gdraw_command_image_destroy(oldImage);
-  //draw it once you go tthe layer
+  //draw it once you go the layer
     gdraw_command_image_draw(ctx, Weather_currentWeatherIcon, GPoint(85, 6));
 }
 
@@ -691,7 +695,6 @@ static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
 
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   // Store incoming information
-APP_LOG(APP_LOG_LEVEL_ERROR, context);
 static char temperature_buffer[8];
 static char conditions_buffer[32];
 static char condition_layer_buffer[32];
@@ -709,6 +712,14 @@ static char weather_layer_buffer[32];
 case KEY_CONDITIONS:
   conditionId = (int *)t->value->int32;
   break;
+      case KEY_TRAFFIC_TITLE:
+      APP_LOG(APP_LOG_LEVEL_ERROR, "KEY_TRAFFIC_TITLE");
+      break;
+      case KEY_TRAFFIC_WARNING_ONE:       APP_LOG(APP_LOG_LEVEL_ERROR, "KEY_TRAFFIC_WARNING_ONE");
+      break;
+      case KEY_TRAFFIC_WARNING_TWO:      APP_LOG(APP_LOG_LEVEL_ERROR, "KEY_TRAFFIC_WARNING_TWO");
+      break;
+      case KEY_TRAFFIC_DIRECTION:       APP_LOG(APP_LOG_LEVEL_ERROR, "KEY_TRAFFIC_DIRECTION");break;
 default:
   APP_LOG(APP_LOG_LEVEL_ERROR, "Key %d not recognized!", (int)t->key);
   break;

@@ -1,5 +1,5 @@
 // Listen for when an AppMessage is received
-Pebble.addEventListener('appmessage',
+/*Pebble.addEventListener('appmessage',
   function(e) {
     console.log('Travel AppMessage received!');
     getLiveTrafficReport();
@@ -67,4 +67,4 @@ Pebble.addEventListener('ready',
     getLiveTrafficReport();
   }
 );
-
+*/
