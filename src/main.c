@@ -173,7 +173,9 @@ static void set_weather_icon(Layer *layer, GContext *ctx) {
 }
 
 static void render_calendar_background(Layer *layer, GContext *ctx) {
+    GDrawCommandImage* oldImage = calendar_background;
     calendar_background = gdraw_command_image_create_with_resource(RESOURCE_ID_CALENDAR_BACKGROUND);
+    gdraw_command_image_destroy(oldImage);
     gdraw_command_image_draw(ctx, calendar_background, GPoint(114, 4));
 }
 
@@ -433,7 +435,7 @@ static void update_task(struct tm *tick_time) {
     }
   }
   // Morning reading time
-  else if ((hours <= 8 && hours >= 7) && (days >= 1 && days <= 5)) {
+  else if ((hours < 8 && hours >= 7) && (days >= 1 && days <= 5)) {
     if(!currentlyReadTime) {
       vibes_double_pulse();
       setTasksToFalse();
@@ -649,12 +651,12 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
 
 static void main_window_unload(Window *window) {
   fonts_unload_custom_font(s_time_font);  
+    //Kill the images
+    layer_destroy(s_calendar_background_layer);
   
-  layer_destroy(s_task_color_layer);
-  gpath_destroy(s_task_color_path);
-  layer_destroy(s_weather_icon_layer);
-  layer_destroy(s_calendar_background_layer);
-
+  gdraw_command_image_destroy(Weather_currentWeatherIcon);
+  gdraw_command_image_destroy(calendar_background);
+  
   // Destroy TextLayer
   text_layer_destroy(s_time_layer);
   text_layer_destroy(s_task_layer);
@@ -668,9 +670,11 @@ static void main_window_unload(Window *window) {
   text_layer_destroy(s_travel_row_two_layer);
   text_layer_destroy(s_travel_row_three_layer);
   text_layer_destroy(s_travel_row_four_layer);
-  //Kill the images
-  gdraw_command_image_destroy(Weather_currentWeatherIcon);
-  gdraw_command_image_destroy(calendar_background);
+  
+  layer_destroy(s_task_color_layer);
+  gpath_destroy(s_task_color_path);
+  layer_destroy(s_weather_icon_layer);
+
 }
 
 static void main_window_load(Window *window) {   
@@ -698,9 +702,7 @@ static void outbox_sent_callback(DictionaryIterator *iterator, void *context) {
 static void inbox_received_callback(DictionaryIterator *iterator, void *context) {
   // Store incoming information
 static char temperature_buffer[8];
-static char conditions_buffer[32];
-static char condition_layer_buffer[32];
-static char weather_layer_buffer[32];
+static char weather_layer_buffer[8];
 // Read first item
   Tuple *t = dict_read_first(iterator);
 
