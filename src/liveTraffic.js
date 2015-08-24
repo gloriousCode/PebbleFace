@@ -1,5 +1,5 @@
 // Listen for when an AppMessage is received
-/*Pebble.addEventListener('appmessage',
+Pebble.addEventListener('appmessage',
   function(e) {
     console.log('Travel AppMessage received!');
     getLiveTrafficReport();
@@ -24,16 +24,16 @@ function getLiveTrafficReport() {
       // responseText contains a JSON object with weather info
       var json = JSON.parse(responseText);
       var dictionary = {};
-      for(var i = 0; i< json.features; i++) {
-        if(json.features[i].roads[0].suburb == "Gosford" || json.features[i].roads[0].suburb == "Woy Woy" || 
-           json.features[i].roads[0].suburb == "Cowan" || json.features[i].roads[0].suburb == "Hawkesbury River" || 
-           json.features[i].roads[0].suburb == "Mt White" || json.features[i].roads[0].suburb == "Calga" || 
-           json.features[i].roads[0].suburb == "Ourimbah")
+      for(var i = 0; i< json.features.length; i++) {
+        if(json.features[i].properties.roads[0].suburb == "Gosford" || json.features[i].properties.roads[0].suburb == "Woy Woy" || 
+           json.features[i].properties.roads[0].suburb == "Cowan" || json.features[i].properties.roads[0].suburb == "Hawkesbury River" || 
+           json.features[i].properties.roads[0].suburb == "Mt White" || json.features[i].properties.roads[0].suburb == "Calga" || 
+           json.features[i].properties.roads[0].suburb == "Ourimbah")
           {
             var trafficTitle = json.features[i].properties.headline;     
             var adviceA = json.features[i].properties.adviceA;
             var adviceB = json.features[i].properties.adviceB;
-            var suburbDirection = json.features[i].roads[0].suburb + " " + json.features[i].roads[0].impactedLanes.affectedDirection;
+            var suburbDirection = json.features[i].properties.roads[0].suburb + " " + json.features[i].properties.roads[0].impactedLanes[0].affectedDirection;
             dictionary =
              {
               'KEY_TRAFFIC_TITLE': trafficTitle,
@@ -67,4 +67,3 @@ Pebble.addEventListener('ready',
     getLiveTrafficReport();
   }
 );
-*/
