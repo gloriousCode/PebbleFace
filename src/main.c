@@ -431,6 +431,24 @@ static void setTasksToFalse()
     currentlyTravelTime = false;
     currentlyFreeTime = false;
     currentlyMeditating = false;
+    light_enable_interaction();
+}
+
+static void update_weather()
+{
+    // Get weather update every 30 minutes
+    time_t temp = time(NULL);
+    struct tm *tick_time = localtime(&temp);
+    if(tick_time->tm_min % 30 == 0)
+    {
+        // Begin dictionary
+        DictionaryIterator *iter;
+        app_message_outbox_begin(&iter);
+        // Add a key-value pair
+        dict_write_uint8(iter, 0, 0);
+        // Send the message!
+        app_message_outbox_send();
+    }
 }
 
 //First row of the time. Typically the minutes
@@ -609,6 +627,7 @@ static void update_task(struct tm *tick_time)
             taskColour = GColorPurple;
             layer_set_update_proc(s_task_color_layer, task_background_color);
             set_travel_row_text();
+            update_weather();
         }
     }
     // Work time
@@ -640,6 +659,7 @@ static void update_task(struct tm *tick_time)
             taskColour = GColorOrange;
             layer_set_update_proc(s_task_color_layer, task_background_color);
             set_travel_row_text();
+            update_weather();
         }
     }
     // Gym time
@@ -724,22 +744,7 @@ static void update_time()
 
 
 
-static void update_weather()
-{
-    // Get weather update every 30 minutes
-    time_t temp = time(NULL);
-    struct tm *tick_time = localtime(&temp);
-    if(tick_time->tm_min % 30 == 0)
-    {
-        // Begin dictionary
-        DictionaryIterator *iter;
-        app_message_outbox_begin(&iter);
-        // Add a key-value pair
-        dict_write_uint8(iter, 0, 0);
-        // Send the message!
-        app_message_outbox_send();
-    }
-}
+
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed)
 {
@@ -832,6 +837,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
               {
                 snprintf(title_buffer, sizeof(title_buffer), "%s", t->value->cstring);
                 text_layer_set_text(s_travel_row_one_layer, title_buffer);
+                light_enable_interaction();
               }
             break;
             case KEY_TRAFFIC_WARNING_ONE:  

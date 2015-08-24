@@ -16,39 +16,8 @@
     "resources": {
         "media": [
             {
-                "file": "images/problems.PNG",
-                "name": "PROBLEMS",
-                "type": "png"
-            },
-            {
-                "file": "data/THUNDERSTORM.pdc",
-                "name": "WEATHER_THUNDERSTORM",
-                "type": "raw"
-            },
-            {
-                "file": "images/Capture.PNG",
-                "name": "CURRENT_APPEARANCE",
-                "type": "png"
-            },
-            {
-                "file": "data/CLEAR_DAY.pdc",
-                "name": "WEATHER_CLEAR",
-                "type": "raw"
-            },
-            {
-                "file": "images/rsz_gee_logo_latest_3.png",
-                "menuIcon": true,
-                "name": "LOGO",
-                "type": "png"
-            },
-            {
-                "file": "data/DATE_BG.pdc",
-                "name": "CALENDAR_BACKGROUND",
-                "type": "raw"
-            },
-            {
-                "file": "data/CLOUDY_DAY.pdc",
-                "name": "WEATHER_CLOUDY",
+                "file": "data/HEAVY_RAIN.pdc",
+                "name": "WEATHER_RAIN",
                 "type": "raw"
             },
             {
@@ -57,18 +26,49 @@
                 "type": "raw"
             },
             {
+                "file": "data/PARTLY_CLOUDY.pdc",
+                "name": "WEATHER_PARTLY_CLOUDY",
+                "type": "raw"
+            },
+            {
+                "file": "data/DATE_BG.pdc",
+                "name": "CALENDAR_BACKGROUND",
+                "type": "raw"
+            },
+            {
+                "file": "images/problems.PNG",
+                "name": "PROBLEMS",
+                "type": "png"
+            },
+            {
                 "file": "images/prep.PNG",
                 "name": "PREP",
                 "type": "png"
             },
             {
-                "file": "data/CLEAR_NIGHT.pdc",
-                "name": "WEATHER_CLEAR_NIGHT",
+                "file": "data/THUNDERSTORM.pdc",
+                "name": "WEATHER_THUNDERSTORM",
                 "type": "raw"
             },
             {
-                "file": "data/HEAVY_RAIN.pdc",
-                "name": "WEATHER_RAIN",
+                "file": "data/CLEAR_DAY.pdc",
+                "name": "WEATHER_CLEAR",
+                "type": "raw"
+            },
+            {
+                "file": "images/Capture.PNG",
+                "name": "CURRENT_APPEARANCE",
+                "type": "png"
+            },
+            {
+                "file": "images/rsz_gee_logo_latest_3.png",
+                "menuIcon": true,
+                "name": "LOGO",
+                "type": "png"
+            },
+            {
+                "file": "data/CLOUDY_DAY.pdc",
+                "name": "WEATHER_CLOUDY",
                 "type": "raw"
             },
             {
@@ -78,13 +78,13 @@
                 "type": "font"
             },
             {
-                "file": "data/PARTLY_CLOUDY_NIGHT.pdc",
-                "name": "WEATHER_PARTLY_CLOUDY_NIGHT",
+                "file": "data/CLEAR_NIGHT.pdc",
+                "name": "WEATHER_CLEAR_NIGHT",
                 "type": "raw"
             },
             {
-                "file": "data/PARTLY_CLOUDY.pdc",
-                "name": "WEATHER_PARTLY_CLOUDY",
+                "file": "data/PARTLY_CLOUDY_NIGHT.pdc",
+                "name": "WEATHER_PARTLY_CLOUDY_NIGHT",
                 "type": "raw"
             }
         ]
