@@ -9,7 +9,6 @@ static TextLayer *s_row_two_layer;
 static TextLayer *s_row_three_layer;
 static TextLayer *s_weather_layer;
 static TextLayer *s_day_of_month_layer;
-
 static TextLayer *s_travel_row_one_layer;
 static TextLayer *s_travel_row_two_layer;
 static TextLayer *s_travel_row_three_layer;
@@ -669,6 +668,9 @@ static void main_window_unload(Window *window) {
   text_layer_destroy(s_travel_row_two_layer);
   text_layer_destroy(s_travel_row_three_layer);
   text_layer_destroy(s_travel_row_four_layer);
+  //Kill the images
+  gdraw_command_image_destroy(Weather_currentWeatherIcon);
+  gdraw_command_image_destroy(calendar_background);
 }
 
 static void main_window_load(Window *window) {   
