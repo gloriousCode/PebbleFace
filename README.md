@@ -2,7 +2,8 @@
 First time making a watchface for Pebble Time
 
 
-<img src="/resources/images/Capture.PNG" width="151" height="171" /><img src="/resources/images/prep.PNG" width="151" height="171" />
+<img src="/resources/images/Capture.PNG" width="151" height="171" /><img src="/resources/images/prep.PNG" width="151" height="171" /><img src="/resources/images/problems.PNG" width="152" height="171" />
+
 
 
 Concept
@@ -27,9 +28,9 @@ Finally, I'm making this watchface open source so that others find it easy to de
 + Weather temp and condition updates / 30 minutes
 + Minimised time interface when new data needs to be rendered
 + Bus/Train times displayed at TRAVEL and PREP times
-
-## Planned Features
 + Live traffic incident updates using NSW transport data program
++ 
+## Planned Features
 + Timeline pins
 + Reorganisation of code
 
