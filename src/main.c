@@ -421,7 +421,7 @@ static void clear_travel_row_text() {
 //Perform certain functions depending on what time it is
 static void update_task(struct tm *tick_time) {
   // Morning prep time
-  if (((hours >= 5 && minutes >55) || (hours <= 6 && minutes <= 55)) && days >= 1 && days <= 5) {
+  if (((hours >= 5 && minutes >55) && (hours <= 6 && minutes <= 55)) && days >= 1 && days <= 5) {
     if(!currentlyPrepTime) {
       vibes_double_pulse();
       setTasksToFalse();
@@ -613,7 +613,7 @@ static void update_time() {
   snprintf(dayOfMonthTextBuffer, sizeof(dayOfMonthTextBuffer), "%d", dayOfMonth);
   text_layer_set_text(s_day_of_month_layer, dayOfMonthTextBuffer);
   update_task(tick_time);
-  if (((hours >= 15 && hours <= 16) && minutes >44 && days >= 1 && days <= 5) || (hours == 16 && minutes <=59 && days >= 1 && days <= 5)  ) {
+  if (((hours >= 15 && hours <= 16) && minutes >44 && days >= 1 && days <= 5) || (hours == 16 && minutes <=59 && days >= 1 && days <= 5) || (((hours >= 5 && minutes >55) && (hours <= 6 && minutes <= 55)) && days >= 1 && days <= 5)  ) {
     //Clear text time and make it smaller for data
     text_layer_set_text(s_row_one_layer, strEmpty);
     text_layer_set_text(s_row_two_layer, strEmpty);
