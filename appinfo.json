@@ -16,6 +16,11 @@
     "resources": {
         "media": [
             {
+                "file": "images/problems.PNG",
+                "name": "PROBLEMS",
+                "type": "png"
+            },
+            {
                 "file": "data/THUNDERSTORM.pdc",
                 "name": "WEATHER_THUNDERSTORM",
                 "type": "raw"
