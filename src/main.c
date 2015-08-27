@@ -589,19 +589,19 @@ static void change_task(GColor color) {
 }
 
 static bool is_morning_prep_time() {
-  return ((hours >= 5 && minutes >=55) && (hours <= 6) && days >= 1 && days <= 5);
+  return ((hours == 5 && minutes >=55) && (hours == 6 && minutes <= 15) && days >= 1 && days <= 5);
 }
 static bool is_afternoon_prep_time() {
-  return ((hours >= 5 && minutes >=55) && (hours <= 6) && days >= 1 && days <= 5);
+  return ((hours == 15 && minutes >=55) && (hours == 16 && minutes <= 5) && days >= 1 && days <= 5);
 }
 static bool is_reading_time() {
-  return ((hours >= 7 && hours < 8) && days >= 1 && days <= 5);
+  return ((hours == 7 && minutes >= 0) && days >= 1 && days <= 5);
 }
 static bool is_work_time() {
-  return ((hours >= 8 && (hours <= 3 && minutes <=45)) && days >= 1 && days <= 5);
+  return (((hours >= 8 && minutes >= 0) && (hours <= 15 && minutes <=45)) && days >= 1 && days <= 5);
 }
 static bool is_travel_time() {
-  return ((hours > 6 && hours < 7) && days >= 1 && days <= 5);
+  return ((hours == 6 && minutes > 15) && days >= 1 && days <= 5);
 }
 static bool is_gym_time() {
   return ((days == 0 && (hours >= 10 && hours < 15)) || ((hours >=17 && hours <=19) && (days == 1 || days == 3 || days == 4)));
@@ -613,49 +613,61 @@ static bool is_meditation_time() {
 //Perform certain functions depending on what time it is
 static void update_task(struct tm *tick_time)
 {
-    if ((is_morning_prep_time() || is_afternoon_prep_time()) && !currentlyPrepTime)
+    if ((is_morning_prep_time() || is_afternoon_prep_time()))
     {
-      change_task(GColorPurple);
-      currentlyPrepTime = true;
-      text_layer_set_text(s_task_layer, prepTime);
-      trigger_js();
-      if(is_morning_prep_time()) {
-        set_morning_train_row_text();
+      if(!currentlyPrepTime) {
+        change_task(GColorPurple);
+        currentlyPrepTime = true;
+        text_layer_set_text(s_task_layer, prepTime);
+        trigger_js();
+        if(is_morning_prep_time()) {
+          set_morning_train_row_text();
+        }
+        else {
+          set_afternoon_travel_text();
+        }   
       }
-      else {
-        set_afternoon_travel_text();
-      }      
     }
-    else if (is_reading_time() && !currentlyReadTime)
-    {
-      change_task(GColorDukeBlue);
-      currentlyReadTime = true;
-      text_layer_set_text(s_task_layer, readTime);
+    else if (is_reading_time()) { 
+      if(!currentlyReadTime)
+      {
+        change_task(GColorDukeBlue);
+        currentlyReadTime = true;
+        text_layer_set_text(s_task_layer, readTime);
+      }
     }
-    else if (is_work_time() && !currentlyWorkTime)    
+    else if (is_work_time())    
     {
-      change_task(GColorBlueMoon);
-      currentlyWorkTime = true;
-      text_layer_set_text(s_task_layer, workTime);
+      if(!currentlyWorkTime) {
+        change_task(GColorBlueMoon);
+        currentlyWorkTime = true;
+        text_layer_set_text(s_task_layer, workTime);
+      }
     }
-    else if (is_travel_time() && !currentlyTravelTime)    
+    else if (is_travel_time())    
     {
-      change_task(GColorOrange);
-      currentlyTravelTime = true;
-      text_layer_set_text(s_task_layer, travelTime);
-      trigger_js();
+      if(!currentlyTravelTime) {
+        change_task(GColorOrange);
+        currentlyTravelTime = true;
+        text_layer_set_text(s_task_layer, travelTime);
+        trigger_js();
+      }
     }
-    else if (is_gym_time() && !currentlyGymTime)    
+    else if (is_gym_time())    
     {
-      change_task(GColorRed);
-      currentlyGymTime = true;
-      text_layer_set_text(s_task_layer, gymTime);
+      if(!currentlyGymTime) {
+        change_task(GColorRed);
+        currentlyGymTime = true;
+        text_layer_set_text(s_task_layer, gymTime);
+      }
     }
-    else if(is_meditation_time() && !currentlyMeditating)    
+    else if(is_meditation_time())    
     {
-      change_task(GColorMelon);
-      currentlyMeditating = true;
-      text_layer_set_text(s_task_layer, meditate);
+      if(!currentlyMeditating) {
+        change_task(GColorMelon);
+        currentlyMeditating = true;
+        text_layer_set_text(s_task_layer, meditate);
+      }
     }
     else if(!currentlyFreeTime)    
     {
