@@ -1,10 +1,51 @@
 Pebble.addEventListener('ready', function() {
-  console.log('PebbleKit JS ready!');
+  console.log('Timeline pin JS loaded');
+  addGymPin();
+  addMeditationPin(); 
+});
 
-  // An hour ahead
-  var date = new Date();
-  date.setHours(19);
+function addMeditationPin() {
+    var date = new Date();
+  if(date.getDay() === 0 || date.getDay() === 6) {
+    return;
+  }
   date.setMinutes(30);
+  date.setHours(20);
+  
+  // Create the pin
+  var pin = {
+    "id": "pin-" + Math.round((Math.random() * 100000)),
+    "time": date.toISOString(),
+    "layout": {
+      "type": "genericPin",
+      "title": "Meditation starts now",
+      "tinyIcon": "system://images/DAY_SEPARATOR",
+      "primaryColor": "#FFFFFF",
+      "secondaryColor": "#666666",
+      "backgroundColor": "#222222"
+    }
+  };
+  
+   console.log('Inserting pin in the future: ' + JSON.stringify(pin));
+
+  insertUserPin(pin, function(responseText) { 
+    console.log('Result: ' + responseText);
+  });
+}
+
+function addGymPin() {
+    var date = new Date();
+  if(date.getDay() !== 0 && date.getDay() !== 1 && date.getDay() !==3 && date.getDay() !== 4) {
+    return;
+  }
+  date.setMinutes(0);
+  if(date.getDay() === 0) {
+      date.setHours(11);
+  }
+ if(date.getDay() == 1 || date.getDay() ==   3 || date.getDay() == 4)
+   {
+     date.setHours(17);
+   }
 
   // Create the pin
   var pin = {
@@ -12,17 +53,20 @@ Pebble.addEventListener('ready', function() {
     "time": date.toISOString(),
     "layout": {
       "type": "genericPin",
-      "title": "Dinner!",
-      "tinyIcon": "system://images/SCHEDULED_EVENT"
+      "title": "Go to gym",
+      "tinyIcon": "system://images/MUSIC_EVENT",
+      "primaryColor": "#FFFFFF",
+      "secondaryColor": "#666666",
+      "backgroundColor": "#222222"
     }
   };
-
-  console.log('Inserting pin in the future: ' + JSON.stringify(pin));
+  
+   console.log('Inserting pin in the future: ' + JSON.stringify(pin));
 
   insertUserPin(pin, function(responseText) { 
     console.log('Result: ' + responseText);
   });
-});
+}
 
 /******************************* timeline lib *********************************/
 
