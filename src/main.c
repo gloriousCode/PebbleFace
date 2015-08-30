@@ -1,4 +1,6 @@
 #include <pebble.h>
+#include "task.h"
+
 
 static Window *s_main_window;
 
@@ -558,10 +560,10 @@ static void render_text_clock() {
 
 static void set_morning_train_row_text()
 {
-  text_layer_set_text(s_travel_row_one_layer,    "  BER  GOS  OUR");
-  text_layer_set_text(s_travel_row_two_layer,    "  627  615  553");
-  text_layer_set_text(s_travel_row_three_layer,  "  654  624  614");
-  text_layer_set_text(s_travel_row_four_layer,   "  657  635  618");
+  text_layer_set_text(s_travel_row_one_layer,    "   BER  GOS  OUR");
+  text_layer_set_text(s_travel_row_two_layer,    "   627   615  553");
+  text_layer_set_text(s_travel_row_three_layer,  "   654   624  614");
+  text_layer_set_text(s_travel_row_four_layer,   "   657   635  618");
 }
 
 static void set_afternoon_travel_text()
@@ -598,7 +600,7 @@ static bool is_reading_time() {
   return ((hours == 7 && minutes >= 0) && days >= 1 && days <= 5);
 }
 static bool is_work_time() {
-  return (((hours >= 8 && minutes >= 0) && (hours <= 15 && minutes <=45)) && days >= 1 && days <= 5);
+  return ((hours >= 8 && hours <= 16) && days >= 1 && days <= 5);
 }
 static bool is_travel_time() {
   return ((hours == 6 && minutes > 15) && days >= 1 && days <= 5);
