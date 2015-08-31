@@ -29,10 +29,10 @@ Finally, I'm making this watchface open source so that others find it easy to de
 + Minimised time interface when new data needs to be rendered
 + Bus/Train times displayed at TRAVEL and PREP times
 + Live traffic incident updates using NSW transport data program
++ Timeline pins
 
 
 ## Planned Features
-+ Timeline pins
 + Reorganisation of code
 
 
