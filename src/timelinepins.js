@@ -14,7 +14,7 @@ function addMeditationPin() {
   
   // Create the pin
   var pin = {
-    "id": "pin-" + Math.round((Math.random() * 100000)),
+    "id": "pin-meditation-" + date.getDate()  + date.getDay(),
     "time": date.toISOString(),
     "layout": {
       "type": "genericPin",
@@ -27,7 +27,9 @@ function addMeditationPin() {
   };
   
    console.log('Inserting pin in the future: ' + JSON.stringify(pin));
-
+  deleteUserPin(pin, function(responseText) { 
+    console.log('Result: ' + responseText);
+  });
   insertUserPin(pin, function(responseText) { 
     console.log('Result: ' + responseText);
   });
@@ -49,7 +51,7 @@ function addGymPin() {
 
   // Create the pin
   var pin = {
-    "id": "pin-" + Math.round((Math.random() * 100000)),
+    "id": "pin-gym-" + date.getDate()  + date.getDay(),
     "time": date.toISOString(),
     "layout": {
       "type": "genericPin",
@@ -62,7 +64,9 @@ function addGymPin() {
   };
   
    console.log('Inserting pin in the future: ' + JSON.stringify(pin));
-
+  deleteUserPin(pin, function(responseText) { 
+    console.log('Result: ' + responseText);
+  });
   insertUserPin(pin, function(responseText) { 
     console.log('Result: ' + responseText);
   });
