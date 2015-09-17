@@ -177,7 +177,7 @@ static void set_weather_icon(Layer *layer, GContext *ctx)
     Weather_currentWeatherIcon = gdraw_command_image_create_with_resource(iconToLoad);
     gdraw_command_image_destroy(oldImage);
     //draw it once you go the layer
-    gdraw_command_image_draw(ctx, Weather_currentWeatherIcon, GPoint(85, 6));
+    gdraw_command_image_draw(ctx, Weather_currentWeatherIcon, GPoint(62, 6));
 }
 
 static void render_calendar_background(Layer *layer, GContext *ctx)
@@ -337,7 +337,7 @@ static void set_text_layer_bounds()
     text_layer_set_background_color(s_row_three_layer, GColorClear);
     text_layer_set_text_color(s_row_three_layer, GColorWhite);
     //Create weather layer
-    s_weather_layer = text_layer_create(GRect(65, 2, 25, 25));
+    s_weather_layer = text_layer_create(GRect(88, 2, 25, 25));
     text_layer_set_background_color(s_weather_layer, GColorClear);
     text_layer_set_text_color(s_weather_layer, GColorWhite);
     //Create day of month layer
@@ -591,31 +591,108 @@ static void change_task(GColor color) {
 }
 
 static bool is_morning_prep_time() {
-  return ((hours == 5 && minutes >=55) && (hours == 6 && minutes <= 15) && days >= 1 && days <= 5);
+  if(days >= 1 && days <= 5) {
+    if(hours>=5 && hours <=6) {
+      if(hours == 5 && minutes >=55)   {
+        return true;
+      }
+      if(hours == 6 && minutes <= 15) {
+        return true;
+      }
+    }
+  }
+  return false;
 }
 static bool is_afternoon_prep_time() {
-  return ((hours == 15 && minutes >=55) && (hours == 16 && minutes <= 5) && days >= 1 && days <= 5);
+  if(days >= 1 && days <= 5) {
+    if(hours==15) {
+      if(minutes>=55) {
+        return true;
+      }
+    }
+    if(hours < 17 && hours >15) {
+      return true;
+    }
+  }
+  return false;
 }
 static bool is_reading_time() {
-  return ((hours == 7 && minutes >= 0) && days >= 1 && days <= 5);
+  if(days >= 1 && days <= 5)
+    {
+    if(hours == 7) {
+      return true;
+    }
+  }
+  return false;
 }
 static bool is_work_time() {
   return ((hours >= 8 && hours <= 16) && days >= 1 && days <= 5);
 }
 static bool is_travel_time() {
-  return ((hours == 6 && minutes > 15) && days >= 1 && days <= 5);
+  if(days >= 1 && days <= 5)
+    {
+    if(hours == 6)
+      {
+      return true;
+    }
+    if(hours == 17)
+      {
+      return true;
+    }
+  }
+  return false;
 }
 static bool is_gym_time() {
-  return ((days == 0 && (hours >= 10 && hours < 15)) || ((hours >=17 && hours <=19) && (days == 1 || days == 3 || days == 4)));
+  if(days == 0 && hours >=10 && hours <15)
+    {
+      return true;
+  }
+  if(days == 1 || days == 2|| days ==4 || days ==5)
+    {
+    if(hours >=17 && hours <= 19)
+      {
+      return true;
+    }
+  }
+  return false;
 }
 static bool is_meditation_time() {
-  return ((hours == 20 && minutes >= 30) && days >= 1 && days <= 5);
+  if(days >=1 && days <=5)
+    {
+    if(hours == 20)
+      {
+      if(minutes >= 30)
+        {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+static bool is_water_time() {
+  if(days >=1 && days <=5 && hours >= 9 && hours <= 16) {
+    if(minutes == 0) {
+      return true;
+    }
+  }
+  return false;
+}
+
+static void set_water_clock() {
+  change_task(GColorBlue);
+  text_layer_set_text(s_row_one_layer, "DRINK");
+  text_layer_set_text(s_row_two_layer, "SOME");
+  text_layer_set_text(s_row_three_layer, "WATER");
 }
 
 //Perform certain functions depending on what time it is
 static void update_task(struct tm *tick_time)
 {
-    if ((is_morning_prep_time() || is_afternoon_prep_time()))
+  if(is_water_time()) {
+    set_water_clock();
+  }
+    else if ((is_morning_prep_time() || is_afternoon_prep_time()))
     {
       if(!currentlyPrepTime) {
         change_task(GColorPurple);

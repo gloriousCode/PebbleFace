@@ -16,23 +16,29 @@
     "resources": {
         "media": [
             {
+                "characterRegex": "[0-9a-zA-Z - \\': ]",
+                "file": "fonts/imagine_font.ttf",
+                "name": "FONT_IMAGINE_36",
+                "type": "font"
+            },
+            {
+                "file": "data/PARTLY_CLOUDY_NIGHT.pdc",
+                "name": "WEATHER_PARTLY_CLOUDY_NIGHT",
+                "type": "raw"
+            },
+            {
                 "file": "data/HEAVY_RAIN.pdc",
                 "name": "WEATHER_RAIN",
                 "type": "raw"
             },
             {
+                "file": "images/prep.PNG",
+                "name": "PREP",
+                "type": "png"
+            },
+            {
                 "file": "data/LIGHT_RAIN.pdc",
                 "name": "WEATHER_DRIZZLE",
-                "type": "raw"
-            },
-            {
-                "file": "data/PARTLY_CLOUDY.pdc",
-                "name": "WEATHER_PARTLY_CLOUDY",
-                "type": "raw"
-            },
-            {
-                "file": "data/DATE_BG.pdc",
-                "name": "CALENDAR_BACKGROUND",
                 "type": "raw"
             },
             {
@@ -41,24 +47,24 @@
                 "type": "png"
             },
             {
-                "file": "images/prep.PNG",
-                "name": "PREP",
-                "type": "png"
-            },
-            {
-                "file": "data/THUNDERSTORM.pdc",
-                "name": "WEATHER_THUNDERSTORM",
+                "file": "data/CLEAR_NIGHT.pdc",
+                "name": "WEATHER_CLEAR_NIGHT",
                 "type": "raw"
             },
             {
-                "file": "data/CLEAR_DAY.pdc",
-                "name": "WEATHER_CLEAR",
+                "file": "data/DATE_BG.pdc",
+                "name": "CALENDAR_BACKGROUND",
                 "type": "raw"
             },
             {
-                "file": "images/Capture.PNG",
-                "name": "CURRENT_APPEARANCE",
-                "type": "png"
+                "file": "data/CLOUDY_DAY.pdc",
+                "name": "WEATHER_CLOUDY",
+                "type": "raw"
+            },
+            {
+                "file": "data/PARTLY_CLOUDY.pdc",
+                "name": "WEATHER_PARTLY_CLOUDY",
+                "type": "raw"
             },
             {
                 "file": "images/rsz_gee_logo_latest_3.png",
@@ -67,24 +73,18 @@
                 "type": "png"
             },
             {
-                "file": "data/CLOUDY_DAY.pdc",
-                "name": "WEATHER_CLOUDY",
+                "file": "data/THUNDERSTORM.pdc",
+                "name": "WEATHER_THUNDERSTORM",
                 "type": "raw"
             },
             {
-                "characterRegex": "[0-9a-zA-Z - \\': ]",
-                "file": "fonts/imagine_font.ttf",
-                "name": "FONT_IMAGINE_36",
-                "type": "font"
+                "file": "images/Capture.PNG",
+                "name": "CURRENT_APPEARANCE",
+                "type": "png"
             },
             {
-                "file": "data/CLEAR_NIGHT.pdc",
-                "name": "WEATHER_CLEAR_NIGHT",
-                "type": "raw"
-            },
-            {
-                "file": "data/PARTLY_CLOUDY_NIGHT.pdc",
-                "name": "WEATHER_PARTLY_CLOUDY_NIGHT",
+                "file": "data/CLEAR_DAY.pdc",
+                "name": "WEATHER_CLEAR",
                 "type": "raw"
             }
         ]
