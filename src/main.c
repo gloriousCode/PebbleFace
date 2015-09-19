@@ -57,6 +57,7 @@ bool currentlyReadTime = false;
 bool currentlyTravelTime = false;
 bool currentlyFreeTime = false;
 bool currentlyMeditating = false;
+bool currentlyWaterTime = false;
 
 
 //Constants
@@ -93,6 +94,7 @@ const char * readTime = "READ";
 const char * travelTime = "MOVE";
 const char * freeTime = "FREE";
 const char * meditate = "MUSE";
+const char * water = "H20";
 
 const char * strEmpty = "";
 
@@ -325,7 +327,7 @@ static void set_text_layer_bounds()
     text_layer_set_background_color(s_task_layer, GColorClear);
     text_layer_set_text_color(s_task_layer, GColorWhite);
     //Create fuzzy time row one layer
-    s_row_one_layer = text_layer_create(GRect(5, 34, 200, 100));
+    s_row_one_layer = text_layer_create(GRect(5, 32, 200, 100));
     text_layer_set_background_color(s_row_one_layer, GColorClear);
     text_layer_set_text_color(s_row_one_layer, GColorWhite);
     //Create fuzzy time row two layer
@@ -333,7 +335,7 @@ static void set_text_layer_bounds()
     text_layer_set_background_color(s_row_two_layer, GColorClear);
     text_layer_set_text_color(s_row_two_layer, GColorWhite);
     //Create fuzzy time row three layer
-    s_row_three_layer = text_layer_create(GRect(5, 114, 200, 100));
+    s_row_three_layer = text_layer_create(GRect(5, 118, 200, 100));
     text_layer_set_background_color(s_row_three_layer, GColorClear);
     text_layer_set_text_color(s_row_three_layer, GColorWhite);
     //Create weather layer
@@ -433,6 +435,7 @@ static void setTasksToFalse()
     currentlyTravelTime = false;
     currentlyFreeTime = false;
     currentlyMeditating = false;
+    currentlyWaterTime = false;
     light_enable_interaction();
 }
 static void trigger_js() {
@@ -671,7 +674,7 @@ static bool is_meditation_time() {
 }
 
 static bool is_water_time() {
-  if(days >=1 && days <=5 && hours >= 9 && hours <= 16) {
+  if(days >=1 && days <=5 && hours >= 9 && hours < 16) {
     if(minutes == 0) {
       return true;
     }
@@ -680,19 +683,23 @@ static bool is_water_time() {
 }
 
 static void set_water_clock() {
-  change_task(GColorBlue);
-  text_layer_set_text(s_row_one_layer, "DRINK");
-  text_layer_set_text(s_row_two_layer, "SOME");
-  text_layer_set_text(s_row_three_layer, "WATER");
+  text_layer_set_text(s_row_one_layer, "drink");
+  text_layer_set_text(s_row_two_layer, "some");
+  text_layer_set_text(s_row_three_layer, "water");
 }
 
 //Perform certain functions depending on what time it is
 static void update_task(struct tm *tick_time)
 {
   if(is_water_time()) {
-    set_water_clock();
+    if(!currentlyWaterTime) {
+      change_task(GColorLiberty);
+      set_water_clock();
+      currentlyWaterTime = true;
+      text_layer_set_text(s_task_layer, water);
+    }
   }
-    else if ((is_morning_prep_time() || is_afternoon_prep_time()))
+  else if ((is_morning_prep_time() || is_afternoon_prep_time()))
     {
       if(!currentlyPrepTime) {
         change_task(GColorPurple);
@@ -729,6 +736,12 @@ static void update_task(struct tm *tick_time)
         change_task(GColorOrange);
         currentlyTravelTime = true;
         text_layer_set_text(s_task_layer, travelTime);
+        if(hours == 6) {
+          set_morning_train_row_text();
+        }
+        if(hours == 17) {
+          set_afternoon_travel_text();
+        }
         trigger_js();
       }
     }
@@ -767,6 +780,7 @@ static void update_time()
     set_hours_string(tick_time);
     set_days(tick_time);
     set_day_of_month(tick_time);
+
     snprintf(dayOfMonthTextBuffer, sizeof(dayOfMonthTextBuffer), "%d", dayOfMonth);
     text_layer_set_text(s_day_of_month_layer, dayOfMonthTextBuffer);
     update_task(tick_time);
@@ -774,8 +788,10 @@ static void update_time()
     {
        render_small_clock();
     }
-    else
-    {
+    else if(is_water_time()) {
+      set_water_clock();
+    }
+    else {
       render_text_clock();
     }
 }

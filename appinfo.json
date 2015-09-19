@@ -16,6 +16,11 @@
     "resources": {
         "media": [
             {
+                "file": "images/water.PNG",
+                "name": "water",
+                "type": "png"
+            },
+            {
                 "characterRegex": "[0-9a-zA-Z - \\': ]",
                 "file": "fonts/imagine_font.ttf",
                 "name": "FONT_IMAGINE_36",
