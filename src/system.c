@@ -103,7 +103,7 @@ void set_text_layer_bounds()
     text_layer_set_background_color(s_row_one_layer, GColorClear);
     text_layer_set_text_color(s_row_one_layer, GColorWhite);
     //Create fuzzy time row two layer
-    s_row_two_layer = text_layer_create(GRect(5, 72, 200, 100));
+    s_row_two_layer = text_layer_create(GRect(5, 74, 200, 100));
     text_layer_set_background_color(s_row_two_layer, GColorClear);
     text_layer_set_text_color(s_row_two_layer, GColorWhite);
     //Create fuzzy time row three layer
@@ -245,6 +245,9 @@ void update_time_layers() {
   text_layer_set_text(s_travel_row_two_layer, task_text_row_two);
   text_layer_set_text(s_travel_row_three_layer, task_text_row_three);
   text_layer_set_text(s_travel_row_four_layer, task_text_row_four);
+  
+
+  
   if (is_morning_prep_time() || is_afternoon_prep_time() || is_travel_time())
   {
     render_small_clock();

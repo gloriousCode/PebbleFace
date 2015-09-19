@@ -255,7 +255,6 @@ void update_task(struct tm *tick_time)
     }
 }
 
-
 void task_background_color(Layer *layer, GContext *ctx)
 {
     // Set the color using RGB values

@@ -199,18 +199,13 @@ void get_hours_string(struct tm *tick_time)
     }
 }
 
-
-
-
-
-
-
 void update_time()
 {
     time_t temp = time(NULL);
     struct tm *tick_time = localtime(&temp);
     set_time_buffers(tick_time);   
     update_task(tick_time);
+  
     update_time_layers();
 }
 

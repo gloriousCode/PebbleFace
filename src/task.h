@@ -46,5 +46,4 @@ void set_morning_train_row_text();
 void set_afternoon_travel_text();
 void update_task();
 void task_background_color();
-
 GColor taskColour;
