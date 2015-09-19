@@ -61,29 +61,7 @@ bool currentlyWaterTime = false;
 
 
 //Constants
-const char * clock = "clock";
-const char * o = "o'";
-const char * past = "past";
-const char * fivePast = "five past";
-const char * to = "to";
-const char * fiveTo = "five to";
 
-const char * quarter = "quarter";
-const char * twenty = "twenty";
-const char * half = "half";
-
-const char * one = "one";
-const char * two = "two";
-const char * three = "three";
-const char * four = "four";
-const char * five = "five";
-const char * six = "six";
-const char * seven = "seven";
-const char * eight = "eight";
-const char * nine = "nine";
-const char * ten = "ten";
-const char * eleven = "eleven";
-const char * twelve = "twelve";
 
 const char * workTime = "WORK";
 const char * prepTime = "PREP";
@@ -105,19 +83,10 @@ GDrawCommandImage* Weather_currentWeatherIcon;
 //Calendar
 GDrawCommandImage* calendar_background;
 
-/*
-int days = 0;
-int minutes = 0;
-int hours = 0;
-int dayOfMonth = 0;
-*/
 //All the long lived buffers
 static char buffer[] = "0000";
 static char dayOfMonthTextBuffer[] = "0000";
-static char timetextbuffer[] = "000000000";
-static char timetextbufferRowOne[] = "00000000";
-static char timetextbufferRowTwo[] = "00000000";
-static char timetextbufferRowThree[] = "00000000";
+
 
 //Method to draw weather icon
 static void set_weather_icon(Layer *layer, GContext *ctx)
@@ -223,29 +192,6 @@ static void declare_drawing_layer(Window *window)
     layer_set_update_proc(s_calendar_background_layer, render_calendar_background);
 }
 
-/*
-
-//Important mini methods to get the int values of time
-static void set_minutes(struct tm *tick_time) 
-{
-  minutes = tick_time->tm_min;
-}
-
-static void set_hours(struct tm *tick_time) 
-{
-  hours = tick_time->tm_hour;
-}
-
-static void set_days(struct tm *tick_time)
-{
-    days = tick_time->tm_wday;
-}
-
-static void set_day_of_month(struct tm *tick_time)
-{
-    dayOfMonth = tick_time->tm_mday;
-}
-*/
 static void set_hours_string(struct tm *tick_time)
 
 {
@@ -460,91 +406,6 @@ static void update_weather()
     }
 }
 
-//First row of the time. Typically the minutes
-static void set_row_one()
-{
-    
-    if((minutes > 58 || minutes <= 3)|| (minutes > 23 && minutes <= 28))
-    {
-      text_layer_set_font(s_row_one_layer, s_text_time_bold_font);
-    }
-    else
-    {
-        text_layer_set_font(s_row_one_layer, s_text_time_font);
-    }
-    if(((minutes > 58 || minutes <= 3) || (minutes > 23 && minutes <= 28)) && strcmp(timetextbufferRowOne, timetextbuffer) !=0)
-    {
-      snprintf(timetextbufferRowOne, 8, timetextbuffer);
-    }
-    else if(((minutes > 3 && minutes <= 8) || (minutes > 53 && minutes <= 58)) && strcmp(timetextbufferRowOne, five) !=0 )
-    {
-      snprintf(timetextbufferRowOne, 5, five);
-    }
-    else if(((minutes > 8 && minutes <= 13) || (minutes > 48 && minutes <= 53)) && strcmp(timetextbufferRowOne, ten) !=0 )
-    {
-      snprintf(timetextbufferRowOne, 4, ten);
-    }
-    else if(((minutes > 13 && minutes <= 18) || (minutes > 43 && minutes <= 48)) && strcmp(timetextbufferRowOne, quarter) !=0 )
-    {
-      snprintf(timetextbufferRowOne, 8, quarter);
-    }
-    else if(((minutes > 18 && minutes <= 23) || (minutes > 33 && minutes <= 43)) && strcmp(timetextbufferRowOne, twenty) !=0 )
-    {
-      snprintf(timetextbufferRowOne, 7, twenty);
-    }
-    else if(minutes > 28 && minutes <= 33 && strcmp(timetextbufferRowOne, half) !=0 )
-    {
-      snprintf(timetextbufferRowOne, 5, half);
-    }
-    text_layer_set_text(s_row_one_layer, timetextbufferRowOne);
-}
-//Second row of the time. Typically how much past the hour
-static void set_row_two()
-{
-    if((minutes > 58 || minutes <= 3) && strcmp(timetextbufferRowTwo, o) !=0 )
-    {
-      snprintf(timetextbufferRowTwo, 3, o);
-    }
-    else if(((minutes > 3 && minutes <= 23) || (minutes > 28 && minutes <= 33)) && strcmp(timetextbufferRowTwo, past) !=0 )
-    {
-      snprintf(timetextbufferRowTwo, 5, past);
-    }
-    else if((minutes > 23 && minutes <= 28) && strcmp(timetextbufferRowTwo, twenty) !=0 )
-    {
-      snprintf(timetextbufferRowTwo, 7, twenty);
-    }
-    else if((minutes > 33 && minutes <= 38) && strcmp(timetextbufferRowTwo, fiveTo) !=0 )
-    {
-      snprintf(timetextbufferRowTwo, 8, fiveTo);
-    }
-    else if((minutes > 38 && minutes <= 58) && strcmp(timetextbufferRowTwo, to) !=0 )
-    {
-      snprintf(timetextbufferRowTwo, 3, to);
-    }
-    text_layer_set_text(s_row_two_layer, timetextbufferRowTwo);
-}
-//Third row of the time. Usually the hour
-static void set_row_three()
-{
-    if((minutes > 58 || minutes <= 3) && strcmp(timetextbufferRowThree, clock) !=0 )
-    {
-      text_layer_set_font(s_row_three_layer, s_text_time_font);
-      snprintf(timetextbufferRowThree, 6, clock);
-    }
-    else if((minutes > 23 && minutes <= 28) && strcmp(timetextbufferRowThree, five) !=0 )
-    {
-      text_layer_set_font(s_row_three_layer, s_text_time_font);
-      snprintf(timetextbufferRowThree, 5, five);
-    }
-    else if((minutes >3 && minutes <= 23) || (minutes > 28 && minutes <=58))
-    {
-      text_layer_set_font(s_row_three_layer, s_text_time_bold_font);
-      snprintf(timetextbufferRowThree, 8, timetextbuffer);
-    }
-    text_layer_set_text(s_row_three_layer, timetextbufferRowThree);
-}
-
-
 static void render_small_clock() {
   time_t temp = time(NULL);
   struct tm *tick_time = localtime(&temp);
@@ -555,11 +416,36 @@ static void render_small_clock() {
   text_layer_set_text(s_time_layer, buffer);
 }
 
+static void set_font_weight() {
+  
+  if((minutes > 58 || minutes <= 3) && strcmp(timetextbufferRowThree, clock) !=0 )
+  {
+    text_layer_set_font(s_row_three_layer, s_text_time_font);
+    text_layer_set_font(s_row_one_layer, s_text_time_bold_font);
+  }
+  else if((minutes > 23 && minutes <= 28) && strcmp(timetextbufferRowThree, five) !=0 )
+  {
+    text_layer_set_font(s_row_one_layer, s_text_time_bold_font);
+    text_layer_set_font(s_row_three_layer, s_text_time_font);
+  }
+  else if((minutes >3 && minutes <= 23) || (minutes > 28 && minutes <=58))
+  {
+    text_layer_set_font(s_row_one_layer, s_text_time_font);
+    text_layer_set_font(s_row_three_layer, s_text_time_bold_font);
+  }
+}
+
 static void render_text_clock() {
-  set_row_one();
-  set_row_two();
-  set_row_three();
+  get_row_one_text();
+  get_row_two_text();
+  get_row_three_text();
+  
+  text_layer_set_text(s_row_one_layer, timetextbufferRowOne);
+  text_layer_set_text(s_row_two_layer, timetextbufferRowTwo);
+  text_layer_set_text(s_row_three_layer, timetextbufferRowThree);
   text_layer_set_text(s_time_layer, strEmpty);
+  
+  set_font_weight();
 }
 
 static void set_morning_train_row_text()
@@ -593,96 +479,7 @@ static void change_task(GColor color) {
   layer_set_update_proc(s_task_color_layer, task_background_color);
   clear_travel_row_text();
 }
-/*
-static bool is_morning_prep_time() {
-  if(days >= 1 && days <= 5) {
-    if(hours>=5 && hours <=6) {
-      if(hours == 5 && minutes >=55)   {
-        return true;
-      }
-      if(hours == 6 && minutes <= 15) {
-        return true;
-      }
-    }
-  }
-  return false;
-}
-static bool is_afternoon_prep_time() {
-  if(days >= 1 && days <= 5) {
-    if(hours==15) {
-      if(minutes>=55) {
-        return true;
-      }
-    }
-    if(hours < 17 && hours >15) {
-      return true;
-    }
-  }
-  return false;
-}
-static bool is_reading_time() {
-  if(days >= 1 && days <= 5)
-    {
-    if(hours == 7) {
-      return true;
-    }
-  }
-  return false;
-}
-static bool is_work_time() {
-  return ((hours >= 8 && hours <= 16) && days >= 1 && days <= 5);
-}
-static bool is_travel_time() {
-  if(days >= 1 && days <= 5)
-    {
-    if(hours == 6)
-      {
-      return true;
-    }
-    if(hours == 17)
-      {
-      return true;
-    }
-  }
-  return false;
-}
-static bool is_gym_time() {
-  if(days == 0 && hours >=10 && hours <15)
-    {
-      return true;
-  }
-  if(days == 1 || days == 2|| days ==4 || days ==5)
-    {
-    if(hours >=17 && hours <= 19)
-      {
-      return true;
-    }
-  }
-  return false;
-}
-static bool is_meditation_time() {
-  if(days >=1 && days <=5)
-    {
-    if(hours == 20)
-      {
-      if(minutes >= 30)
-        {
-        return true;
-      }
-    }
-  }
-  return false;
-}
 
-static bool is_water_time() {
-  if(days >=1 && days <=5 && hours >= 9 && hours < 16) {
-    if(minutes == 0) {
-      return true;
-    }
-  }
-  return false;
-}
-*/
 static void set_water_clock() {
   text_layer_set_text(s_row_one_layer, "drink");
   text_layer_set_text(s_row_two_layer, "some");
