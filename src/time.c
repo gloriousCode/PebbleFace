@@ -1,5 +1,8 @@
 #include <pebble.h>
 #include "time.h"
+#include "system.h"
+#include "task.h"
+#include "weather.h"  
 
 int days = 0;
 int minutes = 0;
@@ -30,10 +33,14 @@ const char * ten = "ten";
 const char * eleven = "eleven";
 const char * twelve = "twelve";
 
+char buffer[] = "0000";
+char dayOfMonthTextBuffer[] = "000";
 char timetextbuffer[] = "000000000";
 char timetextbufferRowOne[] = "00000000";
 char timetextbufferRowTwo[] = "00000000";
 char timetextbufferRowThree[] = "00000000";
+
+
 
 //Important mini methods to get the int values of time
 void set_minutes(struct tm *tick_time) 
@@ -54,6 +61,15 @@ void set_days(struct tm *tick_time)
 void set_day_of_month(struct tm *tick_time)
 {
     dayOfMonth = tick_time->tm_mday;
+    snprintf(dayOfMonthTextBuffer, sizeof(dayOfMonthTextBuffer), "%d", dayOfMonth);
+}
+
+void set_time_buffers(struct tm * tick_time) {
+  set_hours(tick_time);
+  set_minutes(tick_time);
+  get_hours_string(tick_time);
+  set_days(tick_time);
+  set_day_of_month(tick_time);    
 }
 
 //First row of the time. Typically the minutes
@@ -182,3 +198,19 @@ void get_hours_string(struct tm *tick_time)
         snprintf(timetextbuffer, 8, twelve);
     }
 }
+
+
+
+
+
+
+
+void update_time()
+{
+    time_t temp = time(NULL);
+    struct tm *tick_time = localtime(&temp);
+    set_time_buffers(tick_time);   
+    update_task(tick_time);
+    update_time_layers();
+}
+

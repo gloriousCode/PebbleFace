@@ -1,7 +1,5 @@
 #pragma once
 #include <pebble.h>
-#include "task.h"
-#include "time.h"
 
   //Bools
 bool currentlyWorkTime;
@@ -57,3 +55,4 @@ void set_afternoon_travel_text();
 
 //Perform certain functions depending on what time it is
 void update_task();
+void task_background_color();

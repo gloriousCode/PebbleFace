@@ -1,4 +1,5 @@
 #pragma once
+#include <pebble.h>
 int days;
 int minutes;
 int hours;
@@ -32,6 +33,8 @@ char timetextbuffer[9];
 char timetextbufferRowOne[8];
 char timetextbufferRowTwo[8];
 char timetextbufferRowThree[8];
+char buffer[4];
+char dayOfMonthTextBuffer[3];
 
 //Important mini methods to get the int values of time
 void set_minutes() ;
@@ -43,3 +46,7 @@ void get_row_one_text();
 void get_row_two_text();
 void get_row_three_text();
 void get_hours_string();
+void set_time_buffers();
+
+void update_time_layers();
+void update_time();

@@ -1,6 +1,7 @@
 #include <pebble.h>
 #include "task.h"
 #include "time.h"
+#include "system.h"
 
   //Bools
 bool currentlyWorkTime = false;
@@ -252,4 +253,13 @@ void update_task(struct tm *tick_time)
       currentlyFreeTime = true;
       snprintf(currentTask, 5, freeTime);
     }
+}
+
+
+void task_background_color(Layer *layer, GContext *ctx)
+{
+    // Set the color using RGB values
+    graphics_context_set_fill_color(ctx, taskColour);
+    // Draw the filled shape in above color
+    gpath_draw_filled(ctx, s_task_color_path);
 }
