@@ -37,14 +37,14 @@ function addMeditationPin() {
 
 function addGymPin() {
     var date = new Date();
-  if(date.getDay() !== 0 && date.getDay() !== 1 && date.getDay() !==3 && date.getDay() !== 4) {
+  if(date.getDay() !== 0 && date.getDay() !== 1 && date.getDay() !==2 && date.getDay() !== 4 && date.getDay() !== 5) {
     return;
   }
   date.setMinutes(0);
   if(date.getDay() === 0) {
       date.setHours(11);
   }
- if(date.getDay() == 1 || date.getDay() ==   3 || date.getDay() == 4)
+ if(date.getDay() == 1 || date.getDay() ==   2 || date.getDay() ==   4 || date.getDay() == 5)
    {
      date.setHours(17);
    }

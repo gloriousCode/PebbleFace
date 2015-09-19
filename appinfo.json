@@ -16,8 +16,38 @@
     "resources": {
         "media": [
             {
-                "file": "images/water.PNG",
-                "name": "water",
+                "file": "data/PARTLY_CLOUDY.pdc",
+                "name": "WEATHER_PARTLY_CLOUDY",
+                "type": "raw"
+            },
+            {
+                "file": "data/PARTLY_CLOUDY_NIGHT.pdc",
+                "name": "WEATHER_PARTLY_CLOUDY_NIGHT",
+                "type": "raw"
+            },
+            {
+                "file": "data/CLOUDY_DAY.pdc",
+                "name": "WEATHER_CLOUDY",
+                "type": "raw"
+            },
+            {
+                "file": "images/prep.PNG",
+                "name": "PREP",
+                "type": "png"
+            },
+            {
+                "file": "data/THUNDERSTORM.pdc",
+                "name": "WEATHER_THUNDERSTORM",
+                "type": "raw"
+            },
+            {
+                "file": "data/DATE_BG.pdc",
+                "name": "CALENDAR_BACKGROUND",
+                "type": "raw"
+            },
+            {
+                "file": "images/Capture.PNG",
+                "name": "CURRENT_APPEARANCE",
                 "type": "png"
             },
             {
@@ -32,36 +62,6 @@
                 "type": "font"
             },
             {
-                "file": "data/CLOUDY_DAY.pdc",
-                "name": "WEATHER_CLOUDY",
-                "type": "raw"
-            },
-            {
-                "file": "data/THUNDERSTORM.pdc",
-                "name": "WEATHER_THUNDERSTORM",
-                "type": "raw"
-            },
-            {
-                "file": "data/CLEAR_DAY.pdc",
-                "name": "WEATHER_CLEAR",
-                "type": "raw"
-            },
-            {
-                "file": "data/DATE_BG.pdc",
-                "name": "CALENDAR_BACKGROUND",
-                "type": "raw"
-            },
-            {
-                "file": "data/PARTLY_CLOUDY.pdc",
-                "name": "WEATHER_PARTLY_CLOUDY",
-                "type": "raw"
-            },
-            {
-                "file": "images/prep.PNG",
-                "name": "PREP",
-                "type": "png"
-            },
-            {
                 "file": "data/HEAVY_RAIN.pdc",
                 "name": "WEATHER_RAIN",
                 "type": "raw"
@@ -73,23 +73,23 @@
                 "type": "png"
             },
             {
-                "file": "data/LIGHT_RAIN.pdc",
-                "name": "WEATHER_DRIZZLE",
-                "type": "raw"
-            },
-            {
-                "file": "images/Capture.PNG",
-                "name": "CURRENT_APPEARANCE",
-                "type": "png"
-            },
-            {
                 "file": "images/problems.PNG",
                 "name": "PROBLEMS",
                 "type": "png"
             },
             {
-                "file": "data/PARTLY_CLOUDY_NIGHT.pdc",
-                "name": "WEATHER_PARTLY_CLOUDY_NIGHT",
+                "file": "data/CLEAR_DAY.pdc",
+                "name": "WEATHER_CLEAR",
+                "type": "raw"
+            },
+            {
+                "file": "images/water.PNG",
+                "name": "water",
+                "type": "png"
+            },
+            {
+                "file": "data/LIGHT_RAIN.pdc",
+                "name": "WEATHER_DRIZZLE",
                 "type": "raw"
             }
         ]
