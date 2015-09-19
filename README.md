@@ -30,10 +30,7 @@ Finally, I'm making this watchface open source so that others find it easy to de
 + Bus/Train times displayed at TRAVEL and PREP times
 + Live traffic incident updates using NSW transport data program
 + Timeline pins
-
-
-## Planned Features
-+ Reorganisation of code
++ Code structured in different files so users can just take what they want
 
 
 ## Super cool but not likely features
