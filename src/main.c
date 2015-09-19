@@ -47,36 +47,8 @@ static GPathInfo s_task_color_path_info =
 #define KEY_TRAFFIC_DIRECTION 5
 
 int * conditionId = 0;
-//Bools
-bool currentlyWorkTime = false;
-bool currentlyPrepTime = false;
-bool currentlyGymTime = false;
-bool currentlyCodeTime = false;
-bool currentlyStudyTime = false;
-bool currentlyReadTime = false;
-bool currentlyTravelTime = false;
-bool currentlyFreeTime = false;
-bool currentlyMeditating = false;
-bool currentlyWaterTime = false;
 
 
-//Constants
-
-
-const char * workTime = "WORK";
-const char * prepTime = "PREP";
-const char * gymTime = "GYM";
-const char * codeTime = "CODE";
-const char * studyTime = "STUDY";
-const char * readTime = "READ";
-const char * travelTime = "MOVE";
-const char * freeTime = "FREE";
-const char * meditate = "MUSE";
-const char * water = "H20";
-
-const char * strEmpty = "";
-
-GColor taskColour;
 
 //Weather
 GDrawCommandImage* Weather_currentWeatherIcon;
@@ -191,65 +163,6 @@ static void declare_drawing_layer(Window *window)
     layer_set_update_proc(s_weather_icon_layer, set_weather_icon);
     layer_set_update_proc(s_calendar_background_layer, render_calendar_background);
 }
-
-static void set_hours_string(struct tm *tick_time)
-
-{
-    int timeHours = hours;
-    if(minutes > 33)
-    {
-        timeHours++;
-    }
-    if(timeHours == 1 || timeHours == 13)
-    {
-        snprintf(timetextbuffer, 4, one);
-    }
-    if(timeHours == 2 || timeHours == 14)
-    {
-        snprintf(timetextbuffer, 4, two);
-    }
-    if(timeHours == 3 || timeHours == 15)
-    {
-        snprintf(timetextbuffer, 6, three);
-    }
-    if(timeHours == 4 || timeHours == 16)
-    {
-        snprintf(timetextbuffer, 5, four);
-    }
-    if(timeHours == 5 || timeHours == 17)
-    {
-        snprintf(timetextbuffer, 5, five);
-    }
-    if(timeHours == 6 || timeHours == 18)
-    {
-        snprintf(timetextbuffer, 4, six);
-    }
-    if(timeHours == 7 || timeHours == 19)
-    {
-        snprintf(timetextbuffer, 6, seven);
-    }
-    if(timeHours == 8 || timeHours == 20)
-    {
-        snprintf(timetextbuffer, 6, eight);
-    }
-    if(timeHours == 9 || timeHours == 21)
-    {
-        snprintf(timetextbuffer, 5, nine);
-    }
-    if(timeHours == 10 || timeHours ==22)
-    {
-        snprintf(timetextbuffer, 4, ten);
-    }
-    if(timeHours == 11 || timeHours == 23)
-    {
-        snprintf(timetextbuffer, 8, eleven);
-    }
-    if(timeHours == 12 || timeHours == 24)
-    {
-        snprintf(timetextbuffer, 8, twelve);
-    }
-}
-
 
 static void set_fonts()
 {
@@ -371,20 +284,7 @@ static void add_text_layers_to_window(Window *window)
     layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_travel_row_four_layer));
 }
 
-static void setTasksToFalse()
-{
-    currentlyWorkTime = false;
-    currentlyPrepTime = false;
-    currentlyGymTime = false;
-    currentlyCodeTime = false;
-    currentlyStudyTime = false;
-    currentlyReadTime = false;
-    currentlyTravelTime = false;
-    currentlyFreeTime = false;
-    currentlyMeditating = false;
-    currentlyWaterTime = false;
-    light_enable_interaction();
-}
+
 static void trigger_js() {
           // Begin dictionary
         DictionaryIterator *iter;
@@ -448,126 +348,15 @@ static void render_text_clock() {
   set_font_weight();
 }
 
-static void set_morning_train_row_text()
-{
-  text_layer_set_text(s_travel_row_one_layer,    "   BER  GOS  OUR");
-  text_layer_set_text(s_travel_row_two_layer,    "   627   615  553");
-  text_layer_set_text(s_travel_row_three_layer,  "   654   624  614");
-  text_layer_set_text(s_travel_row_four_layer,   "   657   635  618");
-}
-
-static void set_afternoon_travel_text()
-{
-  text_layer_set_text(s_travel_row_one_layer,    "  M20  BER   GOS");
-  text_layer_set_text(s_travel_row_two_layer,    "  355  415C  415C");
-  text_layer_set_text(s_travel_row_three_layer,  "  407  432R  432R");
-  text_layer_set_text(s_travel_row_four_layer,   "  417  445C  445C");
-}
-
-static void clear_travel_row_text()
-{
-  text_layer_set_text(s_travel_row_one_layer, strEmpty);
-  text_layer_set_text(s_travel_row_two_layer, strEmpty);
-  text_layer_set_text(s_travel_row_three_layer, strEmpty);
-  text_layer_set_text(s_travel_row_four_layer, strEmpty);
-}
-
-static void change_task(GColor color) {
-  taskColour = color;
-  vibes_double_pulse();
-  setTasksToFalse();
+static void update_task_layers() {
   layer_set_update_proc(s_task_color_layer, task_background_color);
-  clear_travel_row_text();
+  text_layer_set_text(s_task_layer,currentTask);
+  
+  text_layer_set_text(s_travel_row_one_layer, task_text_row_one);
+  text_layer_set_text(s_travel_row_two_layer, task_text_row_two);
+  text_layer_set_text(s_travel_row_three_layer, task_text_row_three);
+  text_layer_set_text(s_travel_row_four_layer, task_text_row_four);
 }
-
-static void set_water_clock() {
-  text_layer_set_text(s_row_one_layer, "drink");
-  text_layer_set_text(s_row_two_layer, "some");
-  text_layer_set_text(s_row_three_layer, "water");
-}
-
-
-//Perform certain functions depending on what time it is
-static void update_task(struct tm *tick_time)
-{
-  if(is_water_time()) {
-    if(!currentlyWaterTime) {
-      change_task(GColorLiberty);
-      set_water_clock();
-      currentlyWaterTime = true;
-      text_layer_set_text(s_task_layer, water);
-    }
-  }
-  else if ((is_morning_prep_time() || is_afternoon_prep_time()))
-    {
-      if(!currentlyPrepTime) {
-        change_task(GColorPurple);
-        currentlyPrepTime = true;
-        text_layer_set_text(s_task_layer, prepTime);
-        trigger_js();
-        if(is_morning_prep_time()) {
-          set_morning_train_row_text();
-        }
-        else {
-          set_afternoon_travel_text();
-        }   
-      }
-    }
-    else if (is_reading_time()) { 
-      if(!currentlyReadTime)
-      {
-        change_task(GColorDukeBlue);
-        currentlyReadTime = true;
-        text_layer_set_text(s_task_layer, readTime);
-      }
-    }
-    else if (is_work_time())    
-    {
-      if(!currentlyWorkTime) {
-        change_task(GColorBlueMoon);
-        currentlyWorkTime = true;
-        text_layer_set_text(s_task_layer, workTime);
-      }
-    }
-    else if (is_travel_time())    
-    {
-      if(!currentlyTravelTime) {
-        change_task(GColorOrange);
-        currentlyTravelTime = true;
-        text_layer_set_text(s_task_layer, travelTime);
-        if(hours == 6) {
-          set_morning_train_row_text();
-        }
-        if(hours == 17) {
-          set_afternoon_travel_text();
-        }
-        trigger_js();
-      }
-    }
-    else if (is_gym_time())    
-    {
-      if(!currentlyGymTime) {
-        change_task(GColorRed);
-        currentlyGymTime = true;
-        text_layer_set_text(s_task_layer, gymTime);
-      }
-    }
-    else if(is_meditation_time())    
-    {
-      if(!currentlyMeditating) {
-        change_task(GColorMelon);
-        currentlyMeditating = true;
-        text_layer_set_text(s_task_layer, meditate);
-      }
-    }
-    else if(!currentlyFreeTime)    
-    {
-      change_task(GColorIslamicGreen);
-      currentlyFreeTime = true;
-      text_layer_set_text(s_task_layer,freeTime);
-    }
-}
-
 
 static void update_time()
 {
@@ -576,19 +365,18 @@ static void update_time()
     //Set all the time based values
     set_hours(tick_time);
     set_minutes(tick_time);
-    set_hours_string(tick_time);
+    get_hours_string(tick_time);
     set_days(tick_time);
     set_day_of_month(tick_time);
 
     snprintf(dayOfMonthTextBuffer, sizeof(dayOfMonthTextBuffer), "%d", dayOfMonth);
     text_layer_set_text(s_day_of_month_layer, dayOfMonthTextBuffer);
     update_task(tick_time);
+    update_task_layers();
+  
     if (is_morning_prep_time() || is_afternoon_prep_time() || is_travel_time())
     {
        render_small_clock();
-    }
-    else if(is_water_time()) {
-      set_water_clock();
     }
     else {
       render_text_clock();

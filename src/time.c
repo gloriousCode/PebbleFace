@@ -124,3 +124,61 @@ void get_row_three_text()
       snprintf(timetextbufferRowThree, 8, timetextbuffer);
     }
 }
+
+
+void get_hours_string(struct tm *tick_time)
+{
+    int timeHours = hours;
+    if(minutes > 33)
+    {
+        timeHours++;
+    }
+    if(timeHours == 1 || timeHours == 13)
+    {
+        snprintf(timetextbuffer, 4, one);
+    }
+    if(timeHours == 2 || timeHours == 14)
+    {
+        snprintf(timetextbuffer, 4, two);
+    }
+    if(timeHours == 3 || timeHours == 15)
+    {
+        snprintf(timetextbuffer, 6, three);
+    }
+    if(timeHours == 4 || timeHours == 16)
+    {
+        snprintf(timetextbuffer, 5, four);
+    }
+    if(timeHours == 5 || timeHours == 17)
+    {
+        snprintf(timetextbuffer, 5, five);
+    }
+    if(timeHours == 6 || timeHours == 18)
+    {
+        snprintf(timetextbuffer, 4, six);
+    }
+    if(timeHours == 7 || timeHours == 19)
+    {
+        snprintf(timetextbuffer, 6, seven);
+    }
+    if(timeHours == 8 || timeHours == 20)
+    {
+        snprintf(timetextbuffer, 6, eight);
+    }
+    if(timeHours == 9 || timeHours == 21)
+    {
+        snprintf(timetextbuffer, 5, nine);
+    }
+    if(timeHours == 10 || timeHours ==22)
+    {
+        snprintf(timetextbuffer, 4, ten);
+    }
+    if(timeHours == 11 || timeHours == 23)
+    {
+        snprintf(timetextbuffer, 8, eleven);
+    }
+    if(timeHours == 12 || timeHours == 24)
+    {
+        snprintf(timetextbuffer, 8, twelve);
+    }
+}

@@ -42,3 +42,4 @@ void set_day_of_month();
 void get_row_one_text();
 void get_row_two_text();
 void get_row_three_text();
+void get_hours_string();
