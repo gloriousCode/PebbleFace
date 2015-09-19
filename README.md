@@ -31,9 +31,3 @@ Finally, I'm making this watchface open source so that others find it easy to de
 + Live traffic incident updates using NSW transport data program
 + Timeline pins
 + Code structured in different files so users can just take what they want
-
-
-## Super cool but not likely features
-+ Settings support for custom events at custom times using custom colours
-+ Make sense of Tripviews public facing JSON responses and get realtime transport information
-+ Icons/Animations when a task changes (like a picture of weights when its gym time)
