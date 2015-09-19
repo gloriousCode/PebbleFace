@@ -1,4 +1,10 @@
 #include <pebble.h>
 #pragma once
-//Yeah man, I haven't worked with seperate header files in plain c before
-//void Set_task_background();
+bool is_morning_prep_time();
+bool is_afternoon_prep_time();
+bool is_reading_time();
+bool is_work_time();
+bool is_travel_time();
+bool is_gym_time();
+bool is_meditation_time();
+bool is_water_time();

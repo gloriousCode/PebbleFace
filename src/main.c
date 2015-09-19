@@ -1,6 +1,6 @@
 #include <pebble.h>
 #include "task.h"
-
+#include "time.h"
 
 static Window *s_main_window;
 
@@ -105,11 +105,12 @@ GDrawCommandImage* Weather_currentWeatherIcon;
 //Calendar
 GDrawCommandImage* calendar_background;
 
+/*
 int days = 0;
 int minutes = 0;
 int hours = 0;
 int dayOfMonth = 0;
-
+*/
 //All the long lived buffers
 static char buffer[] = "0000";
 static char dayOfMonthTextBuffer[] = "0000";
@@ -222,7 +223,7 @@ static void declare_drawing_layer(Window *window)
     layer_set_update_proc(s_calendar_background_layer, render_calendar_background);
 }
 
-
+/*
 
 //Important mini methods to get the int values of time
 static void set_minutes(struct tm *tick_time) 
@@ -244,7 +245,7 @@ static void set_day_of_month(struct tm *tick_time)
 {
     dayOfMonth = tick_time->tm_mday;
 }
-
+*/
 static void set_hours_string(struct tm *tick_time)
 
 {
@@ -592,7 +593,7 @@ static void change_task(GColor color) {
   layer_set_update_proc(s_task_color_layer, task_background_color);
   clear_travel_row_text();
 }
-
+/*
 static bool is_morning_prep_time() {
   if(days >= 1 && days <= 5) {
     if(hours>=5 && hours <=6) {
@@ -681,12 +682,13 @@ static bool is_water_time() {
   }
   return false;
 }
-
+*/
 static void set_water_clock() {
   text_layer_set_text(s_row_one_layer, "drink");
   text_layer_set_text(s_row_two_layer, "some");
   text_layer_set_text(s_row_three_layer, "water");
 }
+
 
 //Perform certain functions depending on what time it is
 static void update_task(struct tm *tick_time)
