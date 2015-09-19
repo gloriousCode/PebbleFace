@@ -2,7 +2,7 @@
 First time making a watchface for Pebble Time
 
 
-<img src="/resources/images/Capture.PNG" width="149" height="172" /><img src="/resources/images/prep.PNG" width="151" height="171" /><img src="/resources/images/problems.PNG" width="152" height="171" /><img src="/resources/images/water.PNG" width="147" height="171" />
+<img src="http://i.imgur.com/oDoHbtf.png" width="146" height="171" /><img src="/resources/images/prep.PNG" width="151" height="171" /><img src="/resources/images/problems.PNG" width="152" height="171" /><img src="/resources/images/water.PNG" width="147" height="171" />
 
 
 
