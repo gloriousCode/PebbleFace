@@ -11,11 +11,9 @@ const char * past;
 const char * fivePast;
 const char * to;
 const char * fiveTo;
-
 const char * quarter;
 const char * twenty;
 const char * half;
-
 const char * one;
 const char * two;
 const char * three;
@@ -36,17 +34,14 @@ char timetextbufferRowThree[8];
 char buffer[4];
 char dayOfMonthTextBuffer[3];
 
-//Important mini methods to get the int values of time
 void set_minutes() ;
 void set_hours();
 void set_days();
 void set_day_of_month();
-
 void get_row_one_text();
 void get_row_two_text();
 void get_row_three_text();
 void get_hours_string();
 void set_time_buffers();
-
 void update_time_layers();
 void update_time();

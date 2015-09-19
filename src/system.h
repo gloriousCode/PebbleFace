@@ -30,7 +30,6 @@ GDrawCommandImage* calendar_background;
 GPath *s_task_color_path;
 GPathInfo s_task_color_path_info;
 
-
 void render_calendar_background();
 void declare_drawing_layer();
 void set_fonts();
