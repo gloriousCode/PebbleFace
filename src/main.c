@@ -328,15 +328,15 @@ static void set_text_layer_bounds()
     text_layer_set_background_color(s_task_layer, GColorClear);
     text_layer_set_text_color(s_task_layer, GColorWhite);
     //Create fuzzy time row one layer
-    s_row_one_layer = text_layer_create(GRect(5, 32, 200, 100));
+    s_row_one_layer = text_layer_create(GRect(5, 30, 200, 100));
     text_layer_set_background_color(s_row_one_layer, GColorClear);
     text_layer_set_text_color(s_row_one_layer, GColorWhite);
     //Create fuzzy time row two layer
-    s_row_two_layer = text_layer_create(GRect(5, 74, 200, 100));
+    s_row_two_layer = text_layer_create(GRect(5, 72, 200, 100));
     text_layer_set_background_color(s_row_two_layer, GColorClear);
     text_layer_set_text_color(s_row_two_layer, GColorWhite);
     //Create fuzzy time row three layer
-    s_row_three_layer = text_layer_create(GRect(5, 118, 200, 100));
+    s_row_three_layer = text_layer_create(GRect(5, 116, 200, 100));
     text_layer_set_background_color(s_row_three_layer, GColorClear);
     text_layer_set_text_color(s_row_three_layer, GColorWhite);
     //Create weather layer

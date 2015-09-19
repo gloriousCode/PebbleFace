@@ -21,39 +21,29 @@
                 "type": "png"
             },
             {
+                "file": "data/CLEAR_NIGHT.pdc",
+                "name": "WEATHER_CLEAR_NIGHT",
+                "type": "raw"
+            },
+            {
                 "characterRegex": "[0-9a-zA-Z - \\': ]",
                 "file": "fonts/imagine_font.ttf",
                 "name": "FONT_IMAGINE_36",
                 "type": "font"
             },
             {
-                "file": "data/PARTLY_CLOUDY_NIGHT.pdc",
-                "name": "WEATHER_PARTLY_CLOUDY_NIGHT",
+                "file": "data/CLOUDY_DAY.pdc",
+                "name": "WEATHER_CLOUDY",
                 "type": "raw"
             },
             {
-                "file": "data/HEAVY_RAIN.pdc",
-                "name": "WEATHER_RAIN",
+                "file": "data/THUNDERSTORM.pdc",
+                "name": "WEATHER_THUNDERSTORM",
                 "type": "raw"
             },
             {
-                "file": "images/prep.PNG",
-                "name": "PREP",
-                "type": "png"
-            },
-            {
-                "file": "data/LIGHT_RAIN.pdc",
-                "name": "WEATHER_DRIZZLE",
-                "type": "raw"
-            },
-            {
-                "file": "images/problems.PNG",
-                "name": "PROBLEMS",
-                "type": "png"
-            },
-            {
-                "file": "data/CLEAR_NIGHT.pdc",
-                "name": "WEATHER_CLEAR_NIGHT",
+                "file": "data/CLEAR_DAY.pdc",
+                "name": "WEATHER_CLEAR",
                 "type": "raw"
             },
             {
@@ -62,13 +52,18 @@
                 "type": "raw"
             },
             {
-                "file": "data/CLOUDY_DAY.pdc",
-                "name": "WEATHER_CLOUDY",
+                "file": "data/PARTLY_CLOUDY.pdc",
+                "name": "WEATHER_PARTLY_CLOUDY",
                 "type": "raw"
             },
             {
-                "file": "data/PARTLY_CLOUDY.pdc",
-                "name": "WEATHER_PARTLY_CLOUDY",
+                "file": "images/prep.PNG",
+                "name": "PREP",
+                "type": "png"
+            },
+            {
+                "file": "data/HEAVY_RAIN.pdc",
+                "name": "WEATHER_RAIN",
                 "type": "raw"
             },
             {
@@ -78,8 +73,8 @@
                 "type": "png"
             },
             {
-                "file": "data/THUNDERSTORM.pdc",
-                "name": "WEATHER_THUNDERSTORM",
+                "file": "data/LIGHT_RAIN.pdc",
+                "name": "WEATHER_DRIZZLE",
                 "type": "raw"
             },
             {
@@ -88,8 +83,13 @@
                 "type": "png"
             },
             {
-                "file": "data/CLEAR_DAY.pdc",
-                "name": "WEATHER_CLEAR",
+                "file": "images/problems.PNG",
+                "name": "PROBLEMS",
+                "type": "png"
+            },
+            {
+                "file": "data/PARTLY_CLOUDY_NIGHT.pdc",
+                "name": "WEATHER_PARTLY_CLOUDY_NIGHT",
                 "type": "raw"
             }
         ]
