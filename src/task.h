@@ -33,10 +33,10 @@ char * water;
 char * strEmpty;
 
 char currentTask[5];
-char task_text_row_one[17];
-char task_text_row_two[17];
-char task_text_row_three[17];
-char task_text_row_four[17];
+char task_text_row_one[20];
+char task_text_row_two[20];
+char task_text_row_three[20];
+char task_text_row_four[20];
 
 void setTasksToFalse();
 void clear_travel_row_text();

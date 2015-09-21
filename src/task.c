@@ -31,10 +31,10 @@ char * strEmpty = "";
 GColor taskColour;
 
 char currentTask[] = "00000";
-char task_text_row_one[] = "00000000000000000";
-char task_text_row_two[] = "00000000000000000";
-char task_text_row_three[] = "00000000000000000";
-char task_text_row_four[] = "00000000000000000";
+char task_text_row_one[] = "00000000000000000000";
+char task_text_row_two[] = "00000000000000000000";
+char task_text_row_three[] = "00000000000000000000";
+char task_text_row_four[] = "00000000000000000000";
   
 bool is_morning_prep_time() {
   if(days >= 1 && days <= 5) {
@@ -154,9 +154,9 @@ void change_task(GColor color) {
   setTasksToFalse();
 }
  void set_water_clock() {
-  snprintf(timetextbufferRowOne, 5, "drink");
+  snprintf(timetextbufferRowOne, 6, "drink");
   snprintf(timetextbufferRowTwo, 5, "some");
-  snprintf(timetextbufferRowThree, 5, "water");
+  snprintf(timetextbufferRowThree, 6, "water");
 }
 
 void set_morning_train_row_text()

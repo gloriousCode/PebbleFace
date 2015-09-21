@@ -205,7 +205,6 @@ void update_time()
     struct tm *tick_time = localtime(&temp);
     set_time_buffers(tick_time);   
     update_task(tick_time);
-  
     update_time_layers();
 }
 

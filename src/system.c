@@ -246,14 +246,15 @@ void update_time_layers() {
   text_layer_set_text(s_travel_row_three_layer, task_text_row_three);
   text_layer_set_text(s_travel_row_four_layer, task_text_row_four);
   
-
-  
   if (is_morning_prep_time() || is_afternoon_prep_time() || is_travel_time())
   {
     render_small_clock();
   }
   else {
     render_text_clock();
+  }
+  if(is_water_time()) {
+    set_water_clock();
   }
 }
 
