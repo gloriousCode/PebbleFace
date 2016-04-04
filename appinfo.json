@@ -11,10 +11,37 @@
         ""
     ],
     "companyName": "Glorious Edge",
+    "enableMultiJS": false,
     "longName": "Glorious Watch",
     "projectType": "native",
     "resources": {
         "media": [
+            {
+                "file": "images/prep.PNG",
+                "name": "PREP",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/Capture.PNG",
+                "name": "CURRENT_APPEARANCE",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/rsz_gee_logo_latest_3.png",
+                "menuIcon": true,
+                "name": "LOGO",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/problems.PNG",
+                "name": "PROBLEMS",
+                "type": "bitmap"
+            },
+            {
+                "file": "images/water.PNG",
+                "name": "water",
+                "type": "bitmap"
+            },
             {
                 "file": "data/PARTLY_CLOUDY.pdc",
                 "name": "WEATHER_PARTLY_CLOUDY",
@@ -31,11 +58,6 @@
                 "type": "raw"
             },
             {
-                "file": "images/prep.PNG",
-                "name": "PREP",
-                "type": "png"
-            },
-            {
                 "file": "data/THUNDERSTORM.pdc",
                 "name": "WEATHER_THUNDERSTORM",
                 "type": "raw"
@@ -44,11 +66,6 @@
                 "file": "data/DATE_BG.pdc",
                 "name": "CALENDAR_BACKGROUND",
                 "type": "raw"
-            },
-            {
-                "file": "images/Capture.PNG",
-                "name": "CURRENT_APPEARANCE",
-                "type": "png"
             },
             {
                 "file": "data/CLEAR_NIGHT.pdc",
@@ -67,25 +84,9 @@
                 "type": "raw"
             },
             {
-                "file": "images/rsz_gee_logo_latest_3.png",
-                "menuIcon": true,
-                "name": "LOGO",
-                "type": "png"
-            },
-            {
-                "file": "images/problems.PNG",
-                "name": "PROBLEMS",
-                "type": "png"
-            },
-            {
                 "file": "data/CLEAR_DAY.pdc",
                 "name": "WEATHER_CLEAR",
                 "type": "raw"
-            },
-            {
-                "file": "images/water.PNG",
-                "name": "water",
-                "type": "png"
             },
             {
                 "file": "data/LIGHT_RAIN.pdc",

@@ -14,6 +14,7 @@ bool currentlyTravelTime = false;
 bool currentlyFreeTime = false;
 bool currentlyMeditating = false;
 bool currentlyWaterTime = false;
+bool currentlyStretching = false;
 
 //Constants
 char * workTime = "WORK";
@@ -21,10 +22,11 @@ char * prepTime = "PREP";
 char * gymTime = "GYM";
 char * codeTime = "CODE";
 char * studyTime = "STUDY";
-char * readTime = "READ";
+char * readTime = "POD";
 char * travelTime = "MOVE";
 char * freeTime = "FREE";
 char * meditate = "MUSE";
+char * stretch = "YOGA";
 char * water = "H20";
 char * strEmpty = "";
 
@@ -39,7 +41,7 @@ char task_text_row_four[] = "00000000000000000000";
 bool is_morning_prep_time() {
   if(days >= 1 && days <= 5) {
     if(hours>=5 && hours <=6) {
-      if(hours == 5 && minutes >=55)   {
+      if(hours == 5 && minutes >=50)   {
         return true;
       }
       if(hours == 6 && minutes <= 15) {
@@ -95,7 +97,7 @@ bool is_gym_time() {
   }
   if(days == 1 || days == 2|| days ==4 || days ==5)
     {
-    if(hours >=17 && hours <= 19)
+    if(hours >=12 && hours < 13)
       {
       return true;
     }
@@ -103,6 +105,19 @@ bool is_gym_time() {
   return false;
 }
 bool is_meditation_time() {
+  if(days >=1 && days <=5)
+    {
+    if(hours == 20)
+      {
+      if(minutes >= 45)
+        {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+bool is_stretch_time() {
   if(days >=1 && days <=5)
     {
     if(hours == 20)
@@ -237,6 +252,14 @@ void update_task(struct tm *tick_time)
         change_task(GColorRed);
         currentlyGymTime = true;
         snprintf(currentTask, 5, gymTime);
+      }
+    }
+  else if(is_stretch_time())    
+    {
+      if(!currentlyStretching) {
+        change_task(GColorImperialPurple);
+        currentlyMeditating = true;
+        snprintf(currentTask, 5, meditate);
       }
     }
     else if(is_meditation_time())    
