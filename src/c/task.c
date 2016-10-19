@@ -122,7 +122,7 @@ bool is_stretch_time() {
     {
     if(hours == 20)
       {
-      if(minutes >= 30)
+      if(minutes >= 30 && minutes < 45)
         {
         return true;
       }
@@ -258,8 +258,8 @@ void update_task(struct tm *tick_time)
     {
       if(!currentlyStretching) {
         change_task(GColorImperialPurple);
-        currentlyMeditating = true;
-        snprintf(currentTask, 5, meditate);
+        currentlyStretching = true;
+        snprintf(currentTask, 5, stretch);
       }
     }
     else if(is_meditation_time())    

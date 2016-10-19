@@ -3,6 +3,7 @@
   #include "system.h"
   #include "javascripthandler.h"
   #include "task.h"
+	#include "time.h"
 
 
   uint32_t iconToLoad;
